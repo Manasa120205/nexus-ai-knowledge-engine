@@ -1,16 +1,20 @@
 # NEXUS — AI Knowledge Retrieval & Research Engine
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-4f46e5.svg?style=flat&logo=vercel)](https://temporary-prompt-basin-z3j0r5l.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=flat&logo=github)](https://github.com/Manasa120205/nexus-ai-knowledge-engine)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB.svg?style=flat&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791.svg?style=flat&logo=postgresql)](https://www.postgresql.org)
 [![Redis](https://img.shields.io/badge/Redis-7-DC382D.svg?style=flat&logo=redis)](https://redis.io)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?style=flat&logo=docker)](https://www.docker.com)
-[![Tests](https://img.shields.io/badge/Tests-Pytest%20%7C%20Vitest-brightgreen.svg?style=flat)](./tests)
+[![Tests](https://img.shields.io/badge/Tests-31%20Pytest%20%7C%204%20Vitest%20(100%25)-brightgreen.svg?style=flat)](./tests)
 
 **NEXUS** is an enterprise-grade technical knowledge retrieval and research platform. It is engineered from first principles to bridge the gap between naive semantic vector search and exact technical information retrieval. 
 
-NEXUS combines **dense vector embeddings**, **BM25Okapi sparse lexical search**, **Reciprocal Rank Fusion (RRF)**, **multi-factor re-ranking**, an in-memory **Trie-based prefix autocomplete** written from scratch, a **two-tiered resilient cache (Redis + in-memory fallback)**, and an **automated 50-question IR/RAG evaluation harness**.
+NEXUS combines **dense vector embeddings**, **BM25Okapi sparse lexical search**, **Reciprocal Rank Fusion (RRF)**, **multi-factor re-ranking**, an in-memory **Trie-based prefix autocomplete** written from scratch, a **two-tiered resilient cache (Redis + in-memory fallback)**, **strict multi-tenant data isolation**, a **clean FinanceFlow-inspired SaaS interface**, and an **automated 50-question IR/RAG evaluation harness**.
+
+> **Live Deployment:** [https://temporary-prompt-basin-z3j0r5l.vercel.app](https://temporary-prompt-basin-z3j0r5l.vercel.app)  
+> **Source Repository:** [https://github.com/Manasa120205/nexus-ai-knowledge-engine](https://github.com/Manasa120205/nexus-ai-knowledge-engine)
 
 ---
 
@@ -21,10 +25,10 @@ NEXUS combines **dense vector embeddings**, **BM25Okapi sparse lexical search**,
 - **Custom Trie Autocomplete:** An in-memory Prefix Tree written from scratch providing sub-millisecond ($< 0.2\text{ms}$) completions with $O(M)$ insertions and $O(P + K \log L)$ prefix search.
 - **Grounded RAG & Verifiable Citations:** Synthesizes technical answers strictly anchored in retrieved context passages, complete with bracketed source references (`[Source: Title, Section]`) and explicit refusals when context lacks sufficient evidence.
 - **Structure-Aware Document Ingestion:** Intelligently preserves markdown hierarchies, code fences, and paragraphs. Extracts PDFs with page tracking and YouTube transcripts with exact timestamps.
-- **Dual-Mode Persistence & Zero-Dependency Execution:** Runs out-of-the-box in local development with SQLite (`aiosqlite`) and offline feature hashing, or in production with PostgreSQL (`pgvector`) and Google Gemini.
+- **Persistent Real-User Authentication & Strict Tenant Isolation:** Secure bcrypt password hashing, JWT bearer tokens, and tenant-scoped retrieval filtering ensuring User A never sees, queries, or retrieves User B's documents.
+- **Modern Clean SaaS Interface:** Designed with a clean, high-clarity SaaS aesthetic inspired by FinanceFlow and StealReel — zero AI tropes or visual clutter, intuitive 5-tab navigation, clear onboarding, and graceful error handling.
 - **Multi-Tiered Resilient Cache:** Redis caching with transparent, zero-downtime automatic fallback to an in-memory sliding-window cache if Redis is unreachable.
 - **Curated 50-Question Benchmark Harness:** Real evaluation engine measuring Recall@K, Precision@K, Mean Reciprocal Rank (MRR), nDCG@K, Groundedness, Citation Accuracy, and Latency.
-- **Enterprise React Frontend:** Clean, dark-mode research interface built with React 18, TypeScript, Tailwind CSS, Lucide icons, and interactive visual telemetry.
 
 ---
 
