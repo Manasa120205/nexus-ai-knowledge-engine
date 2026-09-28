@@ -10,6 +10,19 @@ Base = declarative_base()
 def get_engine():
     db_url = settings.DATABASE_URL
     is_sqlite = db_url.startswith("sqlite")
+    
+    # In serverless environments (Vercel/AWS Lambda), ensure SQLite writes to /tmp
+    if is_sqlite and (os.environ.get("VERCEL") or not os.access(".", os.W_OK)):
+        tmp_dir = os.environ.get("TMPDIR", "/tmp")
+        tmp_db = os.path.join(tmp_dir, "nexus.db")
+        if not os.path.exists(tmp_db) and os.path.exists("nexus.db"):
+            try:
+                import shutil
+                shutil.copyfile("nexus.db", tmp_db)
+            except Exception:
+                pass
+        db_url = f"sqlite+aiosqlite:///{tmp_db}"
+
     connect_args = {"check_same_thread": False} if is_sqlite else {}
     
     try:

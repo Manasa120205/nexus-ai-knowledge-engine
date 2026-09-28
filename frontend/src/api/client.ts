@@ -13,7 +13,17 @@ import {
   HealthStatus,
 } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const getBaseUrl = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return '/api/v1';
+  }
+  return 'https://nexus-engine-api.loca.lt/api/v1';
+};
+
+const API_BASE_URL = getBaseUrl();
 
 class ApiClient {
   private getToken(): string | null {
@@ -23,6 +33,7 @@ class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers: Record<string, string> = {
+      'Bypass-Tunnel-Reminder': 'true',
       ...(options.headers as Record<string, string>),
     };
 

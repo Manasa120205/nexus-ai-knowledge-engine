@@ -1,6 +1,7 @@
 # NEXUS — AI Knowledge Retrieval & Research Engine
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-4f46e5.svg?style=flat&logo=vercel)](https://temporary-prompt-basin-z3j0r5l.vercel.app)
+[![Live Web App](https://img.shields.io/badge/Live%20Frontend-Vercel-4f46e5.svg?style=flat&logo=vercel)](https://temporary-brisk-neon-2xgte86.vercel.app)
+[![Backend API](https://img.shields.io/badge/Live%20Backend-HTTPS-009688.svg?style=flat&logo=fastapi)](https://nexus-engine-api.loca.lt/docs)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=flat&logo=github)](https://github.com/Manasa120205/nexus-ai-knowledge-engine)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB.svg?style=flat&logo=react)](https://react.dev)
@@ -13,8 +14,16 @@
 
 NEXUS combines **dense vector embeddings**, **BM25Okapi sparse lexical search**, **Reciprocal Rank Fusion (RRF)**, **multi-factor re-ranking**, an in-memory **Trie-based prefix autocomplete** written from scratch, a **two-tiered resilient cache (Redis + in-memory fallback)**, **strict multi-tenant data isolation**, a **clean FinanceFlow-inspired SaaS interface**, and an **automated 50-question IR/RAG evaluation harness**.
 
-> **Live Deployment:** [https://temporary-prompt-basin-z3j0r5l.vercel.app](https://temporary-prompt-basin-z3j0r5l.vercel.app)  
-> **Source Repository:** [https://github.com/Manasa120205/nexus-ai-knowledge-engine](https://github.com/Manasa120205/nexus-ai-knowledge-engine)
+---
+
+## 🌐 Live Production Endpoints
+
+- **Live Production Web Application (Vercel):** [https://temporary-brisk-neon-2xgte86.vercel.app](https://temporary-brisk-neon-2xgte86.vercel.app)
+- **Production Backend API (HTTPS):** [https://nexus-engine-api.loca.lt](https://nexus-engine-api.loca.lt)
+- **Interactive OpenAPI / Swagger Documentation:** [https://nexus-engine-api.loca.lt/docs](https://nexus-engine-api.loca.lt/docs)
+- **Backend Health Check:** [https://nexus-engine-api.loca.lt/health](https://nexus-engine-api.loca.lt/health)
+- **Official GitHub Repository:** [https://github.com/Manasa120205/nexus-ai-knowledge-engine](https://github.com/Manasa120205/nexus-ai-knowledge-engine)
+- **Local Dev URLs:** Frontend `http://localhost:5173` | Backend `http://127.0.0.1:8000`
 
 ---
 
