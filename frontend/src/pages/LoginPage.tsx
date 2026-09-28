@@ -96,11 +96,23 @@ export const LoginPage: React.FC = () => {
           </button>
         </form>
 
-        <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
-          Don't have an account?{' '}
-          <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-700">
-            Register here
-          </Link>
+        <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100 space-y-2">
+          <div>
+            Don't have an account?{' '}
+            <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-700">
+              Register here
+            </Link>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail('demo@nexus.ai');
+              setPassword('password123');
+            }}
+            className="text-[11px] text-slate-400 hover:text-indigo-600 transition-colors block mx-auto underline decoration-dotted"
+          >
+            Auto-fill test account (demo@nexus.ai)
+          </button>
         </div>
       </div>
     </div>
