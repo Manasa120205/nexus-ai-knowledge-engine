@@ -20,7 +20,7 @@ const getBaseUrl = (): string => {
   if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
     return '/api/v1';
   }
-  return 'https://nexus-engine-api.loca.lt/api/v1';
+  return 'https://fat-dodo-35.loca.lt/api/v1';
 };
 
 const API_BASE_URL = getBaseUrl();
