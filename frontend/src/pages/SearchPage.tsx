@@ -126,7 +126,7 @@ export const SearchPage: React.FC = () => {
               onFocus={() => {
                 if (suggestions.length > 0) setIsAutocompleteOpen(true);
               }}
-              placeholder="Search your knowledge base (e.g. write-ahead log, consensus, B-tree)..."
+              placeholder="Type any word or phrase from your documents (e.g. storage, consensus, budget, raft)..."
               className="w-full pl-11 pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
             />
           </div>

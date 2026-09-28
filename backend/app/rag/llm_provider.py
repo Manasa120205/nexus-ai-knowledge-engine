@@ -50,75 +50,102 @@ class LocalDevelopmentProvider(LLMProvider):
     ) -> Dict[str, Any]:
         if not context_chunks:
             return {
-                "answer": "The indexed sources do not contain any relevant information to answer this question.",
-                "cited_chunk_indices": [],
-                "model_name": self.name,
-                "sufficient_evidence": False,
-            }
-
-        # Analyze evidence sufficiency
-        query_words = set(re.findall(r"[a-zA-Z0-9_\-\+]+", query.lower()))
-        meaningful_query_words = [w for w in query_words if len(w) > 2]
-        
-        # Calculate term overlap across chunks
-        chunk_texts = [c.get("metadata", {}).get("text", "") for c in context_chunks]
-        all_chunk_text = " ".join(chunk_texts).lower()
-
-        matching_words = [w for w in meaningful_query_words if w in all_chunk_text]
-        overlap_ratio = len(matching_words) / len(meaningful_query_words) if meaningful_query_words else 0.0
-
-        # If overlap is too low (< 25%), refuse to hallucinate
-        if overlap_ratio < 0.25 and len(meaningful_query_words) > 0:
-            return {
                 "answer": (
-                    f"The indexed sources do not contain sufficient evidence to answer: \"{query}\". "
-                    f"The retrieved context matches only {len(matching_words)} of {len(meaningful_query_words)} query keywords."
+                    f"Your uploaded documents do not contain sufficient evidence to answer: \"{query}\".\n\n"
+                    "**Tip:** You can upload documents, PDFs, or YouTube transcripts in the **Knowledge Base** tab to search and ask questions about them."
                 ),
                 "cited_chunk_indices": [],
                 "model_name": self.name,
                 "sufficient_evidence": False,
             }
 
-        # Extract relevant sentences from top chunks
-        synthesized_paragraphs = []
-        cited_indices = []
+        # Filter out common conversational words so content terms (even short ones like AI, DB, OS) match
+        STOP_WORDS = {
+            "a", "about", "above", "after", "again", "against", "all", "am", "an", "and",
+            "any", "are", "aren't", "as", "at", "be", "because", "been", "before", "being",
+            "below", "between", "both", "but", "by", "can", "can't", "cannot", "could", "couldn't",
+            "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down", "during",
+            "each", "few", "for", "from", "further", "had", "hadn't", "has", "hasn't",
+            "have", "haven't", "having", "he", "he'd", "he'll", "he's", "her", "here",
+            "how", "i", "i'm", "if", "in", "into", "is", "isn't", "it", "its", "let's",
+            "me", "more", "most", "my", "no", "nor", "not", "of", "off", "on", "once",
+            "only", "or", "other", "our", "out", "over", "own", "same", "she", "should",
+            "so", "some", "such", "tell", "than", "that", "the", "their", "theirs", "them",
+            "then", "there", "these", "they", "this", "those", "through", "to", "too",
+            "under", "until", "up", "very", "was", "we", "were", "what", "when", "where",
+            "which", "while", "who", "whom", "why", "with", "would", "you", "your",
+            "document", "documents", "file", "files", "text", "please", "says", "say"
+        }
 
-        for idx, chunk in enumerate(context_chunks[:3], start=1):
-            text = chunk.get("metadata", {}).get("text", "")
-            title = chunk.get("metadata", {}).get("document_title", "Document")
-            section = chunk.get("metadata", {}).get("section", "Overview")
-            
-            # Split sentences
-            sentences = re.split(r"(?<=[.!?])\s+", text)
-            relevant_sentences = []
-            for s in sentences:
-                s_lower = s.lower()
-                if any(w in s_lower for w in meaningful_query_words):
-                    relevant_sentences.append(s.strip())
+        raw_words = re.findall(r"[a-zA-Z0-9_\-\.\+]+", query.lower())
+        content_words = [w for w in raw_words if w not in STOP_WORDS and len(w) >= 2]
+        if not content_words:
+            content_words = [w for w in raw_words if len(w) >= 2]
 
-            if relevant_sentences:
-                passage = " ".join(relevant_sentences[:3])
-                synthesized_paragraphs.append(f"{passage} [{idx}]")
-                cited_indices.append(idx)
-            elif text:
-                # Use opening sentence of top matching chunk as fallback evidence
-                first_sent = sentences[0].strip() if sentences else text[:200]
-                synthesized_paragraphs.append(f"{first_sent} [{idx}]")
-                cited_indices.append(idx)
+        chunk_texts = [c.get("metadata", {}).get("text", "") for c in context_chunks]
+        all_chunk_text = " ".join(chunk_texts).lower()
 
-        if not synthesized_paragraphs:
+        # Check evidence match
+        matching_words = [w for w in content_words if w in all_chunk_text]
+        has_direct_match = bool(matching_words) or (query.strip().lower() in all_chunk_text)
+
+        # If user asked a query with content words but none appear in retrieved context, refuse politely
+        if content_words and not has_direct_match:
             return {
-                "answer": "The indexed sources do not contain enough specific details to formulate a grounded response.",
+                "answer": (
+                    f"Your uploaded documents do not contain sufficient evidence to answer: \"{query}\".\n\n"
+                    "I searched through your uploaded knowledge sources, but could not find information matching your query. "
+                    "Please check your documents in the **Knowledge Base** or rephrase your question."
+                ),
                 "cited_chunk_indices": [],
                 "model_name": self.name,
                 "sufficient_evidence": False,
             }
 
-        answer = (
-            f"Based on the indexed sources for **{query}**:\n\n"
-            + "\n\n".join(synthesized_paragraphs)
-        )
+        # Extract and synthesize the most relevant statements from top chunks
+        synthesized_paragraphs = []
+        cited_indices = []
 
+        for idx, chunk in enumerate(context_chunks[:3], start=1):
+            text = chunk.get("metadata", {}).get("text", "")
+            if not text:
+                continue
+
+            # Split into natural sentences and lines
+            lines_and_sentences = [
+                s.strip()
+                for s in re.split(r"(?<=[.!?])\s+|\n{2,}", text)
+                if s.strip() and len(s.strip()) > 10
+            ]
+
+            # Find matching sentences
+            relevant_sentences = []
+            for s in lines_and_sentences:
+                s_lower = s.lower()
+                if any(w in s_lower for w in content_words) or query.lower() in s_lower:
+                    relevant_sentences.append(s)
+
+            if relevant_sentences:
+                passage = " ".join(relevant_sentences[:4])
+                synthesized_paragraphs.append(f"{passage} [{idx}]")
+                cited_indices.append(idx)
+            elif lines_and_sentences:
+                passage = " ".join(lines_and_sentences[:2])
+                synthesized_paragraphs.append(f"{passage} [{idx}]")
+                cited_indices.append(idx)
+
+        if not synthesized_paragraphs:
+            return {
+                "answer": (
+                    f"Your uploaded documents do not contain sufficient evidence to answer: \"{query}\".\n\n"
+                    "No relevant passages could be extracted from your files."
+                ),
+                "cited_chunk_indices": [],
+                "model_name": self.name,
+                "sufficient_evidence": False,
+            }
+
+        answer = "\n\n".join(synthesized_paragraphs)
         return {
             "answer": answer,
             "cited_chunk_indices": list(set(cited_indices)),

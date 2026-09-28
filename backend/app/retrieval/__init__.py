@@ -9,15 +9,17 @@ from backend.app.core.logging import logger
 
 
 async def warmup_indices(session: AsyncSession) -> int:
-    """Loads all persisted document chunks into vector store, BM25 inverted index, and Autocomplete Trie."""
-    stmt = select(DocumentChunk)
+    """Loads all persisted document chunks into vector store, BM25 inverted index, and Autocomplete Trie with user_id."""
+    from backend.app.models.document import Document
+    stmt = select(DocumentChunk, Document.user_id).join(Document, DocumentChunk.document_id == Document.id)
     result = await session.execute(stmt)
-    chunks = result.scalars().all()
+    rows = result.all()
 
-    for ch in chunks:
+    for ch, user_id in rows:
         meta = {
             "document_id": ch.document_id,
             "document_title": ch.chunk_metadata.get("document_title", "Technical Document"),
+            "user_id": user_id or ch.chunk_metadata.get("user_id"),
             "text": ch.text,
             "section": ch.section,
             "page_number": ch.page_number,
@@ -30,5 +32,5 @@ async def warmup_indices(session: AsyncSession) -> int:
         bm25_engine.index_chunk(ch.id, ch.text, meta)
         autocomplete_trie.populate_from_text(ch.text)
 
-    logger.info(f"Warmed up indices with {len(chunks)} chunks.")
-    return len(chunks)
+    logger.info(f"Warmed up indices with {len(rows)} chunks.")
+    return len(rows)

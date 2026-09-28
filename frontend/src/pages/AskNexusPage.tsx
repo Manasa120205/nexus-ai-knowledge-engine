@@ -85,10 +85,10 @@ export const AskNexusPage: React.FC = () => {
       {/* Header */}
       <div className="space-y-1 pb-4 border-b border-slate-200">
         <h1 className="text-2xl font-bold text-slate-900">
-          Ask a question about your knowledge
+          Ask questions about your documents
         </h1>
         <p className="text-sm text-slate-500">
-          Ask questions about the documents and sources you have added. Answers are based strictly on the information available in your knowledge base.
+          Type any question in plain English or type a single keyword from your uploaded files. NEXUS finds the exact passages and gives you an immediate cited answer.
         </p>
       </div>
 
@@ -111,7 +111,7 @@ export const AskNexusPage: React.FC = () => {
                 }
               }}
               rows={3}
-              placeholder="What is overfitting and how can it be prevented?"
+              placeholder="Ask any question (e.g. 'How does Raft elect leaders?') or type any word from your files (e.g. 'consensus', 'storage', 'budget')..."
               className="form-input resize-none"
             />
           </div>

@@ -43,8 +43,41 @@ export const DashboardPage: React.FC = () => {
           Welcome back, {displayName}
         </h1>
         <p className="text-sm text-slate-600">
-          Your knowledge base contains the documents and sources you have added to NEXUS.
+          Your private research assistant for technical documents, notes, and study material.
         </p>
+      </div>
+
+      {/* Clear Purpose Card: What is NEXUS? */}
+      <div className="card p-5 sm:p-6 bg-gradient-to-r from-indigo-50/60 via-white to-slate-50 border-indigo-100 shadow-sm space-y-3">
+        <div className="flex items-start gap-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            💡
+          </div>
+          <div className="space-y-1.5">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900">
+              What does this website do?
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Instead of reading through long PDF documents, notes, or YouTube videos manually, NEXUS reads them for you.
+              Upload any document in the <strong>Knowledge Base</strong>, then go to <strong>Ask NEXUS</strong> to ask questions or look up any word. NEXUS gives you direct answers backed by verified source citations from your files.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-indigo-100/70 text-xs">
+          <div className="flex items-center gap-2 p-2 rounded bg-white/80 border border-slate-200">
+            <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[11px] shrink-0">1</span>
+            <span className="text-slate-700"><strong>Knowledge:</strong> Upload your PDFs or text</span>
+          </div>
+          <div className="flex items-center gap-2 p-2 rounded bg-white/80 border border-slate-200">
+            <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[11px] shrink-0">2</span>
+            <span className="text-slate-700"><strong>Search:</strong> Instant keyword search</span>
+          </div>
+          <div className="flex items-center gap-2 p-2 rounded bg-white/80 border border-slate-200">
+            <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[11px] shrink-0">3</span>
+            <span className="text-slate-700"><strong>Ask:</strong> Get direct answers & citations</span>
+          </div>
+        </div>
       </div>
 
       {/* Error state with polite retry */}
