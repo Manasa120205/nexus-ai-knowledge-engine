@@ -1,3 +1,4 @@
+import os
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -108,9 +109,26 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Mount API routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+# Locate and serve built frontend static assets if available (Production & Serverless mode)
+dist_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "frontend", "dist")
+if not os.path.exists(dist_dir):
+    dist_dir = os.path.abspath("frontend/dist")
+
+if os.path.exists(dist_dir):
+    assets_dir = os.path.join(dist_dir, "assets")
+    if os.path.exists(assets_dir):
+        from fastapi.staticfiles import StaticFiles
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="static-assets")
+
+from fastapi.responses import FileResponse
+
 
 @app.get("/", tags=["Root"])
-async def root():
+async def root(request: Request):
+    accept = request.headers.get("accept", "")
+    index_file = os.path.join(dist_dir, "index.html") if os.path.exists(dist_dir) else ""
+    if "text/html" in accept and index_file and os.path.exists(index_file):
+        return FileResponse(index_file)
     return {
         "name": settings.PROJECT_NAME,
         "version": settings.VERSION,
@@ -127,3 +145,17 @@ async def health_check():
         "version": settings.VERSION,
         "service": settings.PROJECT_NAME,
     }
+
+
+if os.path.exists(dist_dir):
+    @app.get("/{full_path:path}", tags=["Frontend"])
+    async def serve_spa_frontend(full_path: str):
+        if full_path.startswith("api/") or full_path in ("health", "docs", "redoc", "openapi.json"):
+            return JSONResponse({"detail": "Not Found"}, status_code=404)
+        file_target = os.path.join(dist_dir, full_path)
+        if full_path and os.path.isfile(file_target):
+            return FileResponse(file_target)
+        index_target = os.path.join(dist_dir, "index.html")
+        if os.path.exists(index_target):
+            return FileResponse(index_target)
+        return JSONResponse({"detail": "Not Found"}, status_code=404)

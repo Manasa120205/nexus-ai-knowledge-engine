@@ -20,6 +20,9 @@ import {
   Layers,
   Sparkles,
   Lock,
+  Play,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { PipelineExplainer } from '../components/PipelineExplainer';
 
@@ -30,6 +33,7 @@ export const KnowledgeBasePage: React.FC = () => {
   const [activeModal, setActiveModal] = useState<'upload' | 'youtube' | null>(null);
   const [selectedDocChunks, setSelectedDocChunks] = useState<{ doc: DocumentItem; chunks: DocumentChunk[] } | null>(null);
   const [showExplainerModal, setShowExplainerModal] = useState(false);
+  const [showExplainerInline, setShowExplainerInline] = useState(true);
 
   // Form states
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -130,6 +134,11 @@ export const KnowledgeBasePage: React.FC = () => {
             Create Account
           </Link>
         </div>
+
+        {/* Explainer visible even when logged out */}
+        <div className="pt-8 border-t border-slate-200 text-left">
+          <PipelineExplainer />
+        </div>
       </div>
     );
   }
@@ -147,12 +156,12 @@ export const KnowledgeBasePage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowExplainerModal(true)}
+            onClick={() => setShowExplainerInline(!showExplainerInline)}
             className="btn-outline !text-xs text-indigo-700 border-indigo-200 bg-indigo-50/50 hover:bg-indigo-50"
-            title="Watch how documents are processed & indexed"
+            title="Toggle animated pipeline walkthrough"
           >
             <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-            <span>How it Works</span>
+            <span>{showExplainerInline ? 'Hide How it Works' : 'Watch How it Works'}</span>
           </button>
           <button
             onClick={() => { setActiveModal('upload'); setFormError(null); }}
@@ -171,6 +180,38 @@ export const KnowledgeBasePage: React.FC = () => {
         </div>
       </div>
 
+      {/* Prominent Animated Video-Style Pipeline Explainer Card */}
+      {showExplainerInline && (
+        <div className="card p-5 sm:p-6 bg-slate-900 text-white shadow-md border border-slate-800 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Interactive Pipeline Animation</span>
+              </div>
+              <h2 className="text-base sm:text-lg font-bold text-white">
+                How NEXUS Processes &amp; Searches Your Documents
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                Watch how documents are split into semantic chunks, indexed across BM25 &amp; 384-d Vector Space, and retrieved with strict citations.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setShowExplainerInline(false)}
+                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium"
+              >
+                Hide Explainer
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-slate-800">
+            <PipelineExplainer />
+          </div>
+        </div>
+      )}
+
       {/* Global Error Banner */}
       {docsError && (
         <div className="p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center justify-between">
@@ -188,13 +229,14 @@ export const KnowledgeBasePage: React.FC = () => {
       {/* Search and Filters */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Search documents by title or type..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow shadow-sm"
+            style={{ paddingLeft: '3.75rem' }}
+            className="w-full pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow shadow-sm"
           />
         </div>
         <div className="text-xs text-slate-500 whitespace-nowrap">

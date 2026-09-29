@@ -172,7 +172,8 @@ export const SearchPage: React.FC = () => {
                 if (suggestions.length > 0) setIsAutocompleteOpen(true);
               }}
               placeholder="Type any word or phrase from your documents (e.g. storage, consensus, budget, raft)..."
-              className="w-full pl-12 pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
+              style={{ paddingLeft: '3.75rem' }}
+              className="w-full pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
             />
           </div>
 

@@ -3,7 +3,7 @@
   "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{backend/**,nexus.db}"
+      "includeFiles": "{backend/**,nexus.db,frontend/dist/**}"
     }
   },
   "rewrites": [
@@ -28,8 +28,8 @@
       "destination": "/api/index.py?__route=openapi.json"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/(.*)",
+      "destination": "/api/index.py?__route=$1"
     }
   ]
 }
