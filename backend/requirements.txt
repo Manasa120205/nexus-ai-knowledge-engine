@@ -2,8 +2,11 @@
 fastapi==0.110.1
 uvicorn[standard]==0.25.0
 pydantic==2.12.0
+pydantic[email]==2.12.0
+email-validator>=2.0.0
 pydantic-settings==2.15.0
-sqlalchemy==2.0.54
+sqlalchemy[asyncio]==2.0.54
+greenlet>=3.0.0
 aiosqlite==0.22.1
 asyncpg==0.31.0
 pgvector>=0.2.5

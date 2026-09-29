@@ -17,17 +17,31 @@ const getBaseUrl = (): string => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return '/api/v1';
+  if (typeof window !== 'undefined') {
+    const custom = localStorage.getItem('nexus_custom_api_url');
+    if (custom) return custom.replace(/\/+$/, '');
   }
-  return 'https://fat-dodo-35.loca.lt/api/v1';
+  return '/api/v1';
 };
 
-const API_BASE_URL = getBaseUrl();
+export const API_BASE_URL = getBaseUrl();
+
+export const setCustomApiUrl = (url: string) => {
+  if (!url) {
+    localStorage.removeItem('nexus_custom_api_url');
+  } else {
+    localStorage.setItem('nexus_custom_api_url', url.replace(/\/+$/, ''));
+  }
+  window.location.reload();
+};
 
 class ApiClient {
   private getToken(): string | null {
     return localStorage.getItem('nexus_access_token');
+  }
+
+  public getBaseUrl(): string {
+    return API_BASE_URL;
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -46,10 +60,25 @@ class ApiClient {
       headers['Content-Type'] = 'application/json';
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...options,
+        headers,
+      });
+    } catch (err: any) {
+      if (
+        err.name === 'TypeError' ||
+        err.message?.includes('Failed to fetch') ||
+        err.message?.includes('NetworkError') ||
+        err.message?.includes('Load failed')
+      ) {
+        throw new Error(
+          'Unable to reach the NEXUS backend server. The cloud service may be waking up (cold start ~15-25s) or temporarily unreachable. Please retry in a few moments.'
+        );
+      }
+      throw err;
+    }
 
     if (!response.ok) {
       let errorMessage = `Request failed with status ${response.status}`;
