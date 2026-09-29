@@ -33,7 +33,7 @@ describe('SearchPage Component', () => {
 
     expect(screen.getByText(/Search your knowledge/i)).toBeInTheDocument();
 
-    const input = screen.getByPlaceholderText(/Search your knowledge base/i);
+    const input = screen.getByPlaceholderText(/Type any word or phrase from your documents/i);
     fireEvent.change(input, { target: { value: 'write-ahead log' } });
     expect((input as HTMLInputElement).value).toBe('write-ahead log');
 

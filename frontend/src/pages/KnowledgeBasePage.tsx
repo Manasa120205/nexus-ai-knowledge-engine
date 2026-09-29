@@ -16,13 +16,16 @@ import {
   RefreshCw,
   Plus,
   Layers,
+  Sparkles,
 } from 'lucide-react';
+import { PipelineExplainer } from '../components/PipelineExplainer';
 
 export const KnowledgeBasePage: React.FC = () => {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeModal, setActiveModal] = useState<'upload' | 'youtube' | null>(null);
   const [selectedDocChunks, setSelectedDocChunks] = useState<{ doc: DocumentItem; chunks: DocumentChunk[] } | null>(null);
+  const [showExplainerModal, setShowExplainerModal] = useState(false);
 
   // Form states
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -113,6 +116,14 @@ export const KnowledgeBasePage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setShowExplainerModal(true)}
+            className="btn-outline !text-xs text-indigo-700 border-indigo-200 bg-indigo-50/50 hover:bg-indigo-50"
+            title="Watch how documents are processed & indexed"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+            <span>How it Works</span>
+          </button>
+          <button
             onClick={() => { setActiveModal('upload'); setFormError(null); }}
             className="btn-primary"
           >
@@ -146,13 +157,13 @@ export const KnowledgeBasePage: React.FC = () => {
       {/* Search and Filters */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Search documents by title or type..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="form-input pl-10"
+            className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow shadow-sm"
           />
         </div>
         <div className="text-xs text-slate-500 whitespace-nowrap">
@@ -459,6 +470,11 @@ export const KnowledgeBasePage: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Animated Pipeline Explainer Modal */}
+      {showExplainerModal && (
+        <PipelineExplainer isModal onClose={() => setShowExplainerModal(false)} />
       )}
     </div>
   );

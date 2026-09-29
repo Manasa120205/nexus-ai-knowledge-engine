@@ -37,9 +37,9 @@ describe('AskNexusPage Component', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText(/Ask a question about your knowledge/i)).toBeInTheDocument();
+    expect(screen.getByText(/Ask questions about your documents/i)).toBeInTheDocument();
 
-    const textarea = screen.getByPlaceholderText(/What is overfitting and how can it be prevented/i);
+    const textarea = screen.getByPlaceholderText(/Ask any question/i);
     fireEvent.change(textarea, { target: { value: 'How does Raft handle leader election?' } });
 
     const askBtn = screen.getByRole('button', { name: /Ask Question/i });

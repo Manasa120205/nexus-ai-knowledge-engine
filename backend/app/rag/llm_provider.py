@@ -85,17 +85,30 @@ class LocalDevelopmentProvider(LLMProvider):
         chunk_texts = [c.get("metadata", {}).get("text", "") for c in context_chunks]
         all_chunk_text = " ".join(chunk_texts).lower()
 
-        # Check evidence match
-        matching_words = [w for w in content_words if w in all_chunk_text]
+        # Check evidence match (exact words, singular/plural, or substring)
+        matching_words = [
+            w for w in content_words
+            if w in all_chunk_text or w.rstrip('s') in all_chunk_text or any(w in t for t in all_chunk_text.split())
+        ]
         has_direct_match = bool(matching_words) or (query.strip().lower() in all_chunk_text)
+
+        # Collect unique document titles in retrieved context
+        doc_titles = [
+            c.get("metadata", {}).get("document_title")
+            for c in context_chunks
+            if c.get("metadata", {}).get("document_title")
+        ]
+        unique_titles = list(dict.fromkeys(doc_titles))
+        titles_str = ", ".join(f'"{t}"' for t in unique_titles[:3]) if unique_titles else "your uploaded documents"
 
         # If user asked a query with content words but none appear in retrieved context, refuse politely
         if content_words and not has_direct_match:
             return {
                 "answer": (
-                    f"Your uploaded documents do not contain sufficient evidence to answer: \"{query}\".\n\n"
-                    "I searched through your uploaded knowledge sources, but could not find information matching your query. "
-                    "Please check your documents in the **Knowledge Base** or rephrase your question."
+                    f"Your uploaded files ({titles_str}) do not contain sufficient evidence to answer: \"{query}\".\n\n"
+                    f"No mentions of **\"{query}\"** were found in your indexed documents.\n"
+                    "• If this topic should be in your files, check that the document has finished uploading in **Knowledge Base**.\n"
+                    "• Try searching for related keywords or synonyms from your document."
                 ),
                 "cited_chunk_indices": [],
                 "model_name": self.name,
@@ -106,44 +119,58 @@ class LocalDevelopmentProvider(LLMProvider):
         synthesized_paragraphs = []
         cited_indices = []
 
-        for idx, chunk in enumerate(context_chunks[:3], start=1):
+        for idx, chunk in enumerate(context_chunks[:4], start=1):
             text = chunk.get("metadata", {}).get("text", "")
+            d_title = chunk.get("metadata", {}).get("document_title", "Document")
             if not text:
                 continue
 
-            # Split into natural sentences and lines
+            # Split into natural sentences, bullet points, and lines
             lines_and_sentences = [
                 s.strip()
-                for s in re.split(r"(?<=[.!?])\s+|\n{2,}", text)
-                if s.strip() and len(s.strip()) > 10
+                for s in re.split(r"(?<=[.!?])\s+|\n+", text)
+                if s.strip() and len(s.strip()) > 8
             ]
 
             # Find matching sentences
             relevant_sentences = []
             for s in lines_and_sentences:
                 s_lower = s.lower()
-                if any(w in s_lower for w in content_words) or query.lower() in s_lower:
+                matches_any = (
+                    any(w in s_lower for w in content_words)
+                    or any(w.rstrip('s') in s_lower for w in content_words)
+                    or any(t in s_lower for t in raw_words if len(t) >= 3)
+                    or query.lower().strip() in s_lower
+                )
+                if matches_any:
                     relevant_sentences.append(s)
 
             if relevant_sentences:
                 passage = " ".join(relevant_sentences[:4])
                 synthesized_paragraphs.append(f"{passage} [{idx}]")
                 cited_indices.append(idx)
-            elif lines_and_sentences:
+            elif lines_and_sentences and has_direct_match and not synthesized_paragraphs:
                 passage = " ".join(lines_and_sentences[:2])
                 synthesized_paragraphs.append(f"{passage} [{idx}]")
                 cited_indices.append(idx)
 
         if not synthesized_paragraphs:
-            return {
-                "answer": (
-                    f"Your uploaded documents do not contain sufficient evidence to answer: \"{query}\".\n\n"
-                    "No relevant passages could be extracted from your files."
-                ),
-                "cited_chunk_indices": [],
-                "model_name": self.name,
-                "sufficient_evidence": False,
-            }
+            # Fallback to top chunk snippet if available
+            top_text = context_chunks[0].get("metadata", {}).get("text", "")
+            if top_text:
+                first_part = top_text[:300].strip() + ("..." if len(top_text) > 300 else "")
+                synthesized_paragraphs.append(f"{first_part} [1]")
+                cited_indices = [1]
+            else:
+                return {
+                    "answer": (
+                        f"No mentions of **\"{query}\"** were found in {titles_str}.\n\n"
+                        "Please verify the keyword or check your files in the Knowledge Base."
+                    ),
+                    "cited_chunk_indices": [],
+                    "model_name": self.name,
+                    "sufficient_evidence": False,
+                }
 
         answer = "\n\n".join(synthesized_paragraphs)
         return {

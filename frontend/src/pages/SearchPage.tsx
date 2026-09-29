@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../api/client';
 import { SearchResultItem, AutocompleteSuggestion, Citation } from '../types';
 import { CitationModal } from '../components/CitationModal';
+import { PipelineExplainer } from '../components/PipelineExplainer';
 import {
   Search,
   FileText,
@@ -22,6 +23,7 @@ export const SearchPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCitation, setSelectedCitation] = useState<Citation | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showExplainerModal, setShowExplainerModal] = useState(false);
 
   // Autocomplete Trie state
   const [suggestions, setSuggestions] = useState<AutocompleteSuggestion[]>([]);
@@ -106,6 +108,16 @@ export const SearchPage: React.FC = () => {
         <p className="text-sm text-slate-500">
           Find exact terms, technical concepts, or paragraphs across your uploaded documents.
         </p>
+        <div className="pt-0.5">
+          <button
+            type="button"
+            onClick={() => setShowExplainerModal(true)}
+            className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>How does NEXUS search work? (Watch Animated Walkthrough)</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Search Input Box */}
@@ -118,7 +130,7 @@ export const SearchPage: React.FC = () => {
           className="flex items-center gap-2"
         >
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={query}
@@ -127,7 +139,7 @@ export const SearchPage: React.FC = () => {
                 if (suggestions.length > 0) setIsAutocompleteOpen(true);
               }}
               placeholder="Type any word or phrase from your documents (e.g. storage, consensus, budget, raft)..."
-              className="w-full pl-11 pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
             />
           </div>
 
@@ -294,6 +306,11 @@ export const SearchPage: React.FC = () => {
           citation={selectedCitation}
           onClose={() => setSelectedCitation(null)}
         />
+      )}
+
+      {/* Pipeline Explainer Modal */}
+      {showExplainerModal && (
+        <PipelineExplainer isModal onClose={() => setShowExplainerModal(false)} />
       )}
     </div>
   );

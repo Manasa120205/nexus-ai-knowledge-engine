@@ -14,6 +14,7 @@ import {
   Layers,
   FolderOpen,
 } from 'lucide-react';
+import { PipelineExplainer } from '../components/PipelineExplainer';
 
 export const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -106,6 +107,11 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* Interactive Animated Pipeline Explainer Section */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6">
+        <PipelineExplainer />
       </section>
 
       {/* Why NEXUS Section */}

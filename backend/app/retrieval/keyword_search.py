@@ -85,10 +85,27 @@ class BM25SearchEngine:
         scores: Dict[str, float] = defaultdict(float)
 
         for token in query_tokens:
-            if token not in self.inverted_index:
+            posting: Dict[str, int] = {}
+            if token in self.inverted_index:
+                posting = dict(self.inverted_index[token])
+            else:
+                # Plural/singular fallback
+                alt_tokens = [token.rstrip('s'), token + 's', token.rstrip('es')]
+                for alt in alt_tokens:
+                    if alt in self.inverted_index:
+                        for cid, tf in self.inverted_index[alt].items():
+                            posting[cid] = posting.get(cid, 0) + tf
+
+                # Substring/compound word fallback (e.g. 'drone' inside 'dronemodel')
+                if len(token) >= 3:
+                    for inv_t in self.inverted_index:
+                        if token in inv_t or inv_t in token:
+                            for cid, tf in self.inverted_index[inv_t].items():
+                                posting[cid] = posting.get(cid, 0) + tf
+
+            if not posting:
                 continue
 
-            posting = self.inverted_index[token]
             df = len(posting)
             # Standard Robertson-Spärck Jones IDF
             idf = math.log(((self.doc_count - df + 0.5) / (df + 0.5)) + 1.0)
@@ -108,10 +125,31 @@ class BM25SearchEngine:
                 term_score = idf * ((tf * (self.k1 + 1.0)) / denom)
 
                 # Bonus for exact full phrase substring match
-                if query.lower() in (self.doc_metadata.get(chunk_id, {}).get("text", "").lower()):
-                    term_score *= 1.25
+                chunk_text_lower = meta.get("text", "").lower()
+                if query.lower() in chunk_text_lower:
+                    term_score *= 1.5
 
                 scores[chunk_id] += term_score
+
+        # Fallback: if no scores were accumulated from inverted index, check direct text containment
+        if not scores:
+            clean_query = query.strip().lower()
+            for chunk_id, meta in self.doc_metadata.items():
+                if filter_doc_id and meta.get("document_id") != filter_doc_id:
+                    continue
+                if filter_user_id and meta.get("user_id") != filter_user_id:
+                    continue
+
+                chunk_text = meta.get("text", "").lower()
+                chunk_title = meta.get("document_title", "").lower()
+
+                # Check if raw query or any query token exists anywhere in text or title
+                if clean_query and (clean_query in chunk_text or clean_query in chunk_title):
+                    scores[chunk_id] += 3.0
+
+                matches = sum(1 for t in query_tokens if len(t) >= 2 and (t in chunk_text or t in chunk_title))
+                if matches > 0:
+                    scores[chunk_id] += float(matches) * 1.5
 
         if not scores:
             return []

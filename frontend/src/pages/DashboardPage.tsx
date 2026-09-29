@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -14,10 +14,17 @@ import {
   FolderOpen,
   AlertCircle,
   RefreshCw,
+  Play,
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
+import { PipelineExplainer } from '../components/PipelineExplainer';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const [showExplainerModal, setShowExplainerModal] = useState(false);
+  const [showExplainerInline, setShowExplainerInline] = useState(false);
 
   const { data: documents, isLoading: isDocsLoading, error: docsError, refetch: refetchDocs } = useQuery({
     queryKey: ['documents-list'],
@@ -78,7 +85,47 @@ export const DashboardPage: React.FC = () => {
             <span className="text-slate-700"><strong>Ask:</strong> Get direct answers & citations</span>
           </div>
         </div>
+
+        {/* Animated Explainer Trigger Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-indigo-100/70">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
+            <span>Curious about how documents are chunked, indexed, and retrieved?</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowExplainerInline(!showExplainerInline)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-indigo-200 text-indigo-700 text-xs font-semibold shadow-2xs transition-colors"
+            >
+              {showExplainerInline ? (
+                <>
+                  <ChevronUp className="w-3.5 h-3.5" />
+                  <span>Hide Explainer</span>
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-3.5 h-3.5" />
+                  <span>Show Animated Explainer</span>
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => setShowExplainerModal(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors"
+            >
+              <Play className="w-3.5 h-3.5 fill-white" />
+              <span>Full Screen Tour</span>
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Inline Animated Explainer (if expanded) */}
+      {showExplainerInline && (
+        <div className="card p-6 border-indigo-200 shadow-md">
+          <PipelineExplainer />
+        </div>
+      )}
 
       {/* Error state with polite retry */}
       {docsError && (
@@ -279,6 +326,11 @@ export const DashboardPage: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+
+      {/* Full-screen explainer modal */}
+      {showExplainerModal && (
+        <PipelineExplainer isModal onClose={() => setShowExplainerModal(false)} />
       )}
     </div>
   );
