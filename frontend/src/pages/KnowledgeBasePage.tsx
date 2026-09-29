@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { DocumentItem, DocumentChunk } from '../types';
 import {
@@ -17,10 +19,12 @@ import {
   Plus,
   Layers,
   Sparkles,
+  Lock,
 } from 'lucide-react';
 import { PipelineExplainer } from '../components/PipelineExplainer';
 
 export const KnowledgeBasePage: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeModal, setActiveModal] = useState<'upload' | 'youtube' | null>(null);
@@ -34,11 +38,12 @@ export const KnowledgeBasePage: React.FC = () => {
   const [youtubeTitle, setYouTubeTitle] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Fetch documents
+  // Fetch documents (only when authenticated)
   const { data: documents = [], isLoading, error: docsError, refetch } = useQuery({
     queryKey: ['documents'],
     queryFn: () => api.listDocuments(),
-    refetchInterval: 10000,
+    enabled: isAuthenticated,
+    refetchInterval: isAuthenticated ? 10000 : false,
   });
 
   // Upload mutation
@@ -102,6 +107,32 @@ export const KnowledgeBasePage: React.FC = () => {
     d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     d.source_type.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+          <Lock className="w-7 h-7" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold text-slate-900">
+            Sign in to access your Knowledge Base
+          </h1>
+          <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+            Your uploaded documents and search indexes are private to your account. Sign in to upload PDFs, search, and manage your technical files.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <Link to="/login" className="btn-primary !px-6 !py-2.5">
+            Sign In
+          </Link>
+          <Link to="/register" className="btn-outline !px-6 !py-2.5">
+            Create Account
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">

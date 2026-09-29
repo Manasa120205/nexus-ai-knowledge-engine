@@ -31,6 +31,8 @@ describe('AskNexusPage Component', () => {
       sufficient_evidence: true,
     });
 
+    localStorage.setItem('nexus_access_token', 'mock_token');
+
     render(
       <BrowserRouter>
         <AskNexusPage />

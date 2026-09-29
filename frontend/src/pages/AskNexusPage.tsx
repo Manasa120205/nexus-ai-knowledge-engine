@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { RAGResponse, Citation } from '../types';
 import { CitationModal } from '../components/CitationModal';
@@ -13,9 +14,11 @@ import {
   ArrowRight,
   RefreshCw,
   Send,
+  Lock,
 } from 'lucide-react';
 
 export const AskNexusPage: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
   const initialQuery = (location.state as any)?.query || '';
 
@@ -79,6 +82,32 @@ export const AskNexusPage: React.FC = () => {
       return <span key={idx}>{part}</span>;
     });
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+          <HelpCircle className="w-7 h-7" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold text-slate-900">
+            Ask NEXUS Research Assistant
+          </h1>
+          <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+            Sign in to ask questions grounded directly in your uploaded technical documentation with verified citations.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <Link to="/login" className="btn-primary !px-6 !py-2.5">
+            Sign In
+          </Link>
+          <Link to="/register" className="btn-outline !px-6 !py-2.5">
+            Create Account
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">

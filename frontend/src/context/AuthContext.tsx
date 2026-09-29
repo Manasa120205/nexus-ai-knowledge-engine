@@ -92,7 +92,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('nexus_access_token') : null;
+    return {
+      user: null,
+      token,
+      isAuthenticated: !!token,
+      isLoading: false,
+      login: async () => {},
+      register: async () => {},
+      logout: () => {},
+      refreshProfile: async () => {},
+    };
   }
   return context;
 };

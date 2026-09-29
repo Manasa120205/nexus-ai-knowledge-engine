@@ -25,6 +25,8 @@ describe('SearchPage Component', () => {
       ],
     });
 
+    localStorage.setItem('nexus_access_token', 'mock_token');
+
     render(
       <BrowserRouter>
         <SearchPage />

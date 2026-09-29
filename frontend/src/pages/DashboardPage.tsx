@@ -22,18 +22,20 @@ import {
 import { PipelineExplainer } from '../components/PipelineExplainer';
 
 export const DashboardPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [showExplainerModal, setShowExplainerModal] = useState(false);
   const [showExplainerInline, setShowExplainerInline] = useState(false);
 
   const { data: documents, isLoading: isDocsLoading, error: docsError, refetch: refetchDocs } = useQuery({
     queryKey: ['documents-list'],
     queryFn: () => api.listDocuments(0, 100),
+    enabled: isAuthenticated,
   });
 
   const { data: history, isLoading: isHistoryLoading } = useQuery({
     queryKey: ['query-history', 0, 5],
     queryFn: () => api.getHistory(0, 5),
+    enabled: isAuthenticated,
   });
 
   const docCount = documents?.length || 0;
@@ -41,6 +43,39 @@ export const DashboardPage: React.FC = () => {
   const hasDocuments = docCount > 0;
 
   const displayName = user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User';
+
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">
+        <div className="max-w-xl mx-auto text-center space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+            <Sparkles className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+              Welcome to NEXUS
+            </h1>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Sign in to manage your technical files, execute sub-second hybrid searches, and get answers with verified citations.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link to="/login" className="btn-primary !px-6 !py-2.5">
+              Sign In
+            </Link>
+            <Link to="/register" className="btn-outline !px-6 !py-2.5">
+              Create Account
+            </Link>
+          </div>
+        </div>
+
+        {/* Interactive Tour for new visitors */}
+        <div className="pt-6 border-t border-slate-200">
+          <PipelineExplainer />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
