@@ -8,24 +8,24 @@
   },
   "rewrites": [
     {
-      "source": "/api/v1/(.*)",
-      "destination": "/api/index.py"
+      "source": "/api/v1/:path*",
+      "destination": "/api/index.py?__route=api/v1/:path*"
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "source": "/api/:path*",
+      "destination": "/api/index.py?__route=api/:path*"
     },
     {
       "source": "/health",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__route=health"
     },
     {
       "source": "/docs",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__route=docs"
     },
     {
       "source": "/openapi.json",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__route=openapi.json"
     },
     {
       "source": "/((?!api/).*)",

@@ -1,6 +1,7 @@
 """Vercel Serverless Entrypoint for NEXUS FastAPI Backend."""
 import os
 import sys
+from urllib.parse import parse_qs
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(current_dir)
@@ -10,32 +11,24 @@ for p in (root_dir, current_dir):
 
 os.environ.setdefault("ENVIRONMENT", "production")
 
-from fastapi import Request
-from fastapi.responses import JSONResponse
 from backend.app.main import app as backend_app
 
-# Top-level ASGI app for Vercel
-app = backend_app
+class VercelPathRewriter:
+    """ASGI middleware that intercepts Vercel rewrites and restores target route."""
+    def __init__(self, asgi_app):
+        self.asgi_app = asgi_app
 
-@app.middleware("http")
-async def path_inspector(request: Request, call_next):
-    # If the requested path is exactly /api/index.py or /api, return debug info on GET
-    path = request.scope.get("path", "")
-    if request.method == "GET" and path in ("/api/index.py", "/api/index", "/api", "/api/"):
-        return JSONResponse({
-            "status": "online",
-            "scope_path": path,
-            "headers": dict(request.headers),
-        })
-    
-    # Restore original path if rewritten by Vercel
-    if path in ("/api/index.py", "/api/index"):
-        matched = (
-            request.headers.get("x-matched-path")
-            or request.headers.get("x-vercel-matched-path")
-            or request.headers.get("x-forwarded-uri")
-        )
-        if matched and matched not in ("/api/index.py", "/api/index"):
-            request.scope["path"] = matched
+    async def __call__(self, scope, receive, send):
+        if scope.get("type") == "http":
+            query_string = scope.get("query_string", b"").decode("utf-8")
+            if "__route=" in query_string:
+                params = parse_qs(query_string)
+                if "__route" in params and params["__route"]:
+                    route = params["__route"][0].lstrip("/")
+                    scope["path"] = f"/{route}"
+                    scope["raw_path"] = f"/{route}".encode("utf-8")
 
-    return await call_next(request)
+        await self.asgi_app(scope, receive, send)
+
+# Assign ASGI entrypoint for Vercel
+app = VercelPathRewriter(backend_app)
