@@ -58,8 +58,7 @@ backend/.env
 frontend/.env.local
 
 # Databases & local state
-nexus.db
-*.db
+!nexus.db
 *.sqlite
 *.sqlite3
 *.db-journal
