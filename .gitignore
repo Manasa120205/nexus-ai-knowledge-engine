@@ -79,3 +79,9 @@ Thumbs.db
 
 .vercel
 .env*
+
+scratch_edge/
+audit_screenshots/
+audit_results.json
+*audit*.mjs
+test_full_user_flow.mjs

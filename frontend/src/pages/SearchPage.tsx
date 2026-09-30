@@ -124,10 +124,6 @@ export const SearchPage: React.FC = () => {
             Create Account
           </Link>
         </div>
-
-        <div className="pt-8 border-t border-slate-200 text-left">
-          <PipelineExplainer />
-        </div>
       </div>
     );
   }
@@ -290,6 +286,20 @@ export const SearchPage: React.FC = () => {
 
       {/* Search Results List */}
       <div className="space-y-3">
+        {!hasSearched && !isLoading && (
+          <div className="card p-8 text-center space-y-3 bg-slate-50/60 border-dashed border-slate-200">
+            <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+              <Search className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-semibold text-slate-800">Ready to search your documents</h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                Type any function name, technical term, or concept to retrieve relevant excerpts with page references and timestamps.
+              </p>
+            </div>
+          </div>
+        )}
+
         {isLoading && (
           <div className="card p-8 text-center text-sm text-slate-500">
             Searching your documents...

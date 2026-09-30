@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -13,14 +13,17 @@ import {
   Database,
   Layers,
   FolderOpen,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { PipelineExplainer } from '../components/PipelineExplainer';
 
 export const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const [showPipelineGuide, setShowPipelineGuide] = useState(false);
 
   return (
-    <div className="space-y-20 py-12">
+    <div className="space-y-14 py-8 sm:py-10">
       {/* Hero Section */}
       <section className="text-center max-w-3xl mx-auto px-4 sm:px-6 space-y-6">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-medium">
@@ -109,9 +112,45 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Interactive Animated Pipeline Explainer Section */}
+      {/* Interactive Architecture Deep Dive (Collapsible) */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6">
-        <PipelineExplainer />
+        <div className="card p-6 border-slate-200 bg-white">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-600 mb-1">
+                <Layers className="w-3.5 h-3.5" />
+                Under the Hood
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">
+                Interactive RAG Architecture &amp; Pipeline Deep Dive
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Explore how ingestion, embedding generation, hybrid retrieval, and grounded synthesis work step-by-step.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowPipelineGuide(!showPipelineGuide)}
+              className="btn-outline text-xs whitespace-nowrap self-start sm:self-center flex items-center gap-1.5"
+            >
+              {showPipelineGuide ? (
+                <>
+                  <span>Hide Architecture Guide</span>
+                  <ChevronUp className="w-3.5 h-3.5" />
+                </>
+              ) : (
+                <>
+                  <span>Explore Architecture Guide</span>
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </div>
+          {showPipelineGuide && (
+            <div className="mt-6 pt-6 border-t border-slate-100">
+              <PipelineExplainer />
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Why NEXUS Section */}

@@ -101,7 +101,7 @@ async def search_documents(
         snippet = text[:220] + "..." if len(text) > 220 else text
 
         items.append(SearchResultItem(
-            chunk_id=c["chunk_id"],
+            chunk_id=str(c.get("chunk_id") or meta.get("chunk_id") or meta.get("document_id", "unknown")),
             document_id=meta.get("document_id", ""),
             document_title=meta.get("document_title", "Technical Resource"),
             text=text,

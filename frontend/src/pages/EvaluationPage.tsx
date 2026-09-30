@@ -213,8 +213,8 @@ export const EvaluationPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {latestMetrics.map((m) => (
-                    <tr key={m.mode} className="hover:bg-slate-50 transition-colors">
+                  {latestMetrics.map((m, idx) => (
+                    <tr key={`${m.mode}-${idx}`} className="hover:bg-slate-50 transition-colors">
                       <td className="py-3 px-4 font-semibold text-slate-900">
                         {m.mode.toUpperCase()}
                       </td>

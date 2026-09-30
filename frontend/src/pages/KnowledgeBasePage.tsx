@@ -33,7 +33,7 @@ export const KnowledgeBasePage: React.FC = () => {
   const [activeModal, setActiveModal] = useState<'upload' | 'youtube' | null>(null);
   const [selectedDocChunks, setSelectedDocChunks] = useState<{ doc: DocumentItem; chunks: DocumentChunk[] } | null>(null);
   const [showExplainerModal, setShowExplainerModal] = useState(false);
-  const [showExplainerInline, setShowExplainerInline] = useState(true);
+  const [showExplainerInline, setShowExplainerInline] = useState(false);
 
   // Form states
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -133,11 +133,6 @@ export const KnowledgeBasePage: React.FC = () => {
           <Link to="/register" className="btn-outline !px-6 !py-2.5">
             Create Account
           </Link>
-        </div>
-
-        {/* Explainer visible even when logged out */}
-        <div className="pt-8 border-t border-slate-200 text-left">
-          <PipelineExplainer />
         </div>
       </div>
     );

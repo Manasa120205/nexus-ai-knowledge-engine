@@ -1,4 +1,5 @@
 import hashlib
+import uuid
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from sqlalchemy import select
@@ -152,7 +153,9 @@ class IngestionPipeline:
 
             for idx, c in enumerate(chunks_data):
                 emb = embeddings[idx] if idx < len(embeddings) else None
+                chunk_id = str(uuid.uuid4())
                 chunk_record = DocumentChunk(
+                    id=chunk_id,
                     document_id=doc.id,
                     chunk_index=c["chunk_index"],
                     text=c["text"],
@@ -186,14 +189,14 @@ class IngestionPipeline:
                 # Index in vector store
                 if emb:
                     vector_store.add_vector(
-                        chunk_id=chunk_record.id,
+                        chunk_id=chunk_id,
                         vector=emb,
                         metadata=chunk_meta,
                     )
 
                 # Index in BM25 keyword engine
                 bm25_engine.index_chunk(
-                    chunk_id=chunk_record.id,
+                    chunk_id=chunk_id,
                     text=c["text"],
                     metadata=chunk_meta,
                 )

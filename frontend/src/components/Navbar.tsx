@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -22,6 +22,17 @@ export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [devDropdownOpen, setDevDropdownOpen] = useState(false);
+  const devDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (devDropdownRef.current && !devDropdownRef.current.contains(event.target as Node)) {
+        setDevDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const mainNav = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -42,7 +53,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo & Brand */}
         <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-2.5">
+          <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-md bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
               N
             </div>
@@ -81,7 +92,7 @@ export const Navbar: React.FC = () => {
           {isAuthenticated ? (
             <>
               {/* Developer / Benchmarks Menu (Subtle) */}
-              <div className="relative">
+              <div className="relative" ref={devDropdownRef}>
                 <button
                   type="button"
                   onClick={() => setDevDropdownOpen(!devDropdownOpen)}
