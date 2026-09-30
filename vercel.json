@@ -29,7 +29,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/api/index.py?__route=$1"
+      "destination": "/index.html"
     }
   ]
 }
