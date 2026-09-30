@@ -7,6 +7,7 @@ import { CitationModal } from '../components/CitationModal';
 import { PipelineExplainer } from '../components/PipelineExplainer';
 import {
   Search,
+  X,
   FileText,
   Video,
   ArrowRight,
@@ -163,7 +164,9 @@ export const SearchPage: React.FC = () => {
           className="flex items-center gap-2"
         >
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <Search className="w-5 h-5" />
+            </div>
             <input
               type="text"
               value={query}
@@ -172,9 +175,19 @@ export const SearchPage: React.FC = () => {
                 if (suggestions.length > 0) setIsAutocompleteOpen(true);
               }}
               placeholder="Type any word or phrase from your documents (e.g. storage, consensus, budget, raft)..."
-              style={{ paddingLeft: '3.75rem' }}
-              className="w-full pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
+              style={{ paddingLeft: '3.5rem' }}
+              className="w-full pr-10 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
             />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                title="Clear query"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           <button
