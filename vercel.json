@@ -28,7 +28,7 @@
       "destination": "/api/index.py?__route=openapi.json"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/|assets/|favicon|.*\\.[a-zA-Z0-9]+$).*)",
       "destination": "/index.html"
     }
   ]
