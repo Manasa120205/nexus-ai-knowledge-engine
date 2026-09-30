@@ -18,7 +18,7 @@ import {
   RefreshCw,
   Plus,
   Layers,
-  Sparkles,
+  HelpCircle,
   Lock,
   Play,
   ChevronDown,
@@ -148,20 +148,20 @@ export const KnowledgeBasePage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Knowledge Base</h1>
-          <p className="text-sm text-slate-500">
-            Upload and manage the documents that power your search and research answers.
+          <h1 className="text-2xl font-bold text-slate-900">Your Documents</h1>
+          <p className="text-sm text-slate-600">
+            Upload your PDFs, notes, or YouTube transcripts. Search for any word or ask questions to get exact answers.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowExplainerInline(!showExplainerInline)}
-            className="btn-outline !text-xs text-indigo-700 border-indigo-200 bg-indigo-50/50 hover:bg-indigo-50"
-            title="Toggle animated pipeline walkthrough"
+            className="btn-outline !text-xs text-slate-700 hover:text-indigo-600 border-slate-300"
+            title="Toggle search walkthrough"
           >
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-            <span>{showExplainerInline ? 'Hide How it Works' : 'Watch How it Works'}</span>
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+            <span>{showExplainerInline ? 'Hide Guide' : 'How Search Works'}</span>
           </button>
           <button
             onClick={() => { setActiveModal('upload'); setFormError(null); }}
@@ -180,35 +180,10 @@ export const KnowledgeBasePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Prominent Animated Video-Style Pipeline Explainer Card */}
+      {/* Prominent Walkthrough Card matching page theme */}
       {showExplainerInline && (
-        <div className="card p-5 sm:p-6 bg-slate-900 text-white shadow-md border border-slate-800 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Interactive Pipeline Animation</span>
-              </div>
-              <h2 className="text-base sm:text-lg font-bold text-white">
-                How NEXUS Processes &amp; Searches Your Documents
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-                Watch how documents are split into semantic chunks, indexed across BM25 &amp; 384-d Vector Space, and retrieved with strict citations.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => setShowExplainerInline(false)}
-                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium"
-              >
-                Hide Explainer
-              </button>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-slate-800">
-            <PipelineExplainer />
-          </div>
+        <div className="card p-5 sm:p-6 bg-white shadow-xs border border-slate-200/90 rounded-xl space-y-4">
+          <PipelineExplainer />
         </div>
       )}
 
@@ -266,11 +241,11 @@ export const KnowledgeBasePage: React.FC = () => {
         ) : filteredDocs.length === 0 ? (
           <div className="p-12 text-center space-y-3">
             <FileText className="w-10 h-10 text-slate-300 mx-auto" />
-            <h3 className="text-sm font-semibold text-slate-700">No documents found</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            <h3 className="text-sm font-semibold text-slate-800">No documents uploaded yet</h3>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
               {searchTerm
-                ? 'No documents matched your search filter.'
-                : 'Your knowledge base is empty. Upload your first PDF or add a video transcript to get started.'}
+                ? 'No documents matched your search term.'
+                : 'Upload your first PDF file or paste a YouTube transcript to start searching keywords and asking questions.'}
             </p>
             {!searchTerm && (
               <button

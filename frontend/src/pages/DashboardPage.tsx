@@ -15,7 +15,7 @@ import {
   AlertCircle,
   RefreshCw,
   Play,
-  Sparkles,
+  BookOpen,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
@@ -49,14 +49,14 @@ export const DashboardPage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">
         <div className="max-w-xl mx-auto text-center space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
-            <Sparkles className="w-7 h-7" />
+            <BookOpen className="w-7 h-7" />
           </div>
           <div className="space-y-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
               Welcome to NEXUS
             </h1>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Sign in to manage your technical files, execute sub-second hybrid searches, and get answers with verified citations.
+              Sign in to upload your files, search for any word, and ask questions to get direct answers with page citations.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -90,10 +90,10 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Clear Purpose Card: What is NEXUS? */}
-      <div className="card p-5 sm:p-6 bg-gradient-to-r from-indigo-50/60 via-white to-slate-50 border-indigo-100 shadow-sm space-y-3">
+      <div className="card p-5 sm:p-6 bg-white border border-slate-200/90 shadow-2xs space-y-3">
         <div className="flex items-start gap-3.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
-            💡
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
+            <BookOpen className="w-4 h-4" />
           </div>
           <div className="space-y-1.5">
             <h2 className="text-sm sm:text-base font-bold text-slate-900">
@@ -106,31 +106,31 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-indigo-100/70 text-xs">
-          <div className="flex items-center gap-2 p-2 rounded bg-white/80 border border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-100 text-xs">
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
             <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[11px] shrink-0">1</span>
             <span className="text-slate-700"><strong>Knowledge:</strong> Upload your PDFs or text</span>
           </div>
-          <div className="flex items-center gap-2 p-2 rounded bg-white/80 border border-slate-200">
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
             <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[11px] shrink-0">2</span>
             <span className="text-slate-700"><strong>Search:</strong> Instant keyword search</span>
           </div>
-          <div className="flex items-center gap-2 p-2 rounded bg-white/80 border border-slate-200">
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
             <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[11px] shrink-0">3</span>
-            <span className="text-slate-700"><strong>Ask:</strong> Get direct answers & citations</span>
+            <span className="text-slate-700"><strong>Ask:</strong> Direct answers & citations</span>
           </div>
         </div>
 
         {/* Animated Explainer Trigger Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-indigo-100/70">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
           <div className="flex items-center gap-2 text-xs text-slate-600">
-            <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
+            <HelpCircle className="w-4 h-4 text-indigo-600 shrink-0" />
             <span>Curious about how documents are chunked, indexed, and retrieved?</span>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowExplainerInline(!showExplainerInline)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-indigo-200 text-indigo-700 text-xs font-semibold shadow-2xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs transition-colors"
             >
               {showExplainerInline ? (
                 <>
@@ -140,7 +140,7 @@ export const DashboardPage: React.FC = () => {
               ) : (
                 <>
                   <ChevronDown className="w-3.5 h-3.5" />
-                  <span>Show Animated Explainer</span>
+                  <span>Show Interactive Tour</span>
                 </>
               )}
             </button>
@@ -157,7 +157,7 @@ export const DashboardPage: React.FC = () => {
 
       {/* Inline Animated Explainer (if expanded) */}
       {showExplainerInline && (
-        <div className="card p-6 border-indigo-200 shadow-md">
+        <div className="card p-6 border-slate-200 shadow-sm">
           <PipelineExplainer />
         </div>
       )}

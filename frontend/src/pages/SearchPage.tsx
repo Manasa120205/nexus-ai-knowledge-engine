@@ -12,7 +12,7 @@ import {
   Video,
   ArrowRight,
   Clock,
-  Sparkles,
+  HelpCircle,
   ExternalLink,
   SlidersHorizontal,
 } from 'lucide-react';
@@ -148,8 +148,8 @@ export const SearchPage: React.FC = () => {
             onClick={() => setShowExplainerModal(true)}
             className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>How does NEXUS search work? (Watch Animated Walkthrough)</span>
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>How does search work? (Watch Quick Tour)</span>
           </button>
         </div>
       </div>
@@ -247,42 +247,42 @@ export const SearchPage: React.FC = () => {
       {showAdvanced && (
         <div className="card p-4 bg-slate-50 border-slate-200 text-xs flex flex-wrap items-center gap-3">
           <span className="font-medium text-slate-700">Search Mode:</span>
-          <div className="inline-flex rounded-md border border-slate-300 bg-white p-0.5 shadow-sm">
+          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-2xs">
             <button
               type="button"
               onClick={() => setMode('ranked')}
-              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                mode === 'ranked' ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                mode === 'ranked' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Smart Ranked (Recommended)
+              Smart Search (Recommended)
             </button>
             <button
               type="button"
               onClick={() => setMode('hybrid')}
-              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                mode === 'hybrid' ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                mode === 'hybrid' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Hybrid
+              Combined
             </button>
             <button
               type="button"
               onClick={() => setMode('keyword')}
-              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                mode === 'keyword' ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                mode === 'keyword' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Exact Keyword
+              Exact Words
             </button>
             <button
               type="button"
               onClick={() => setMode('vector')}
-              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                mode === 'vector' ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:text-slate-900'
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                mode === 'vector' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Conceptual
+              Meaning & Topic
             </button>
           </div>
         </div>

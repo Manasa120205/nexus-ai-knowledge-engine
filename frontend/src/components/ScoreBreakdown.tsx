@@ -22,41 +22,41 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
     <div className="text-xs">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-800/80 text-teal-300 hover:bg-slate-700 transition-colors font-mono border border-slate-700"
-        title="View custom ranking score breakdown"
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors font-medium border border-slate-200"
+        title="View match score breakdown"
       >
-        <Layers className="w-3 h-3 text-teal-400" />
-        <span>Rank Score: {(score * 100).toFixed(1)}%</span>
-        {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+        <Layers className="w-3.5 h-3.5 text-indigo-600" />
+        <span>Match: {(score * 100).toFixed(0)}%</span>
+        {expanded ? <ChevronUp className="w-3 h-3 text-slate-500" /> : <ChevronDown className="w-3 h-3 text-slate-500" />}
       </button>
 
       {expanded && (
-        <div className="mt-2 p-2.5 rounded-md bg-slate-900 border border-slate-800 space-y-1.5 font-mono text-[11px] text-slate-300 animate-in fade-in duration-150">
-          <div className="font-semibold text-slate-400 uppercase tracking-wider text-[10px] pb-1 border-b border-slate-800">
-            Multi-Factor Score Weights
+        <div className="mt-2 p-3 rounded-lg bg-white border border-slate-200 shadow-sm space-y-1.5 text-xs text-slate-700 animate-in fade-in duration-150">
+          <div className="font-semibold text-slate-500 uppercase tracking-wider text-[10px] pb-1.5 border-b border-slate-100">
+            Relevance Factors
           </div>
           {semanticScore !== undefined && (
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Semantic Vector:</span>
-              <span className="text-teal-400">{(semanticScore * 100).toFixed(1)}%</span>
+            <div className="flex justify-between items-center py-0.5">
+              <span className="text-slate-500">Meaning & Topic:</span>
+              <span className="font-semibold text-indigo-600">{(semanticScore * 100).toFixed(0)}%</span>
             </div>
           )}
           {keywordScore !== undefined && (
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">BM25 Keyword:</span>
-              <span className="text-teal-400">{(keywordScore * 100).toFixed(1)}%</span>
+            <div className="flex justify-between items-center py-0.5">
+              <span className="text-slate-500">Exact Word Match:</span>
+              <span className="font-semibold text-indigo-600">{(keywordScore * 100).toFixed(0)}%</span>
             </div>
           )}
           {titleScore !== undefined && (
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Title Match:</span>
-              <span className="text-teal-400">{(titleScore * 100).toFixed(1)}%</span>
+            <div className="flex justify-between items-center py-0.5">
+              <span className="text-slate-500">Document Title Match:</span>
+              <span className="font-semibold text-indigo-600">{(titleScore * 100).toFixed(0)}%</span>
             </div>
           )}
           {freshnessScore !== undefined && (
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Freshness Decay:</span>
-              <span className="text-teal-400">{(freshnessScore * 100).toFixed(1)}%</span>
+            <div className="flex justify-between items-center py-0.5">
+              <span className="text-slate-500">Recent Updates:</span>
+              <span className="font-semibold text-indigo-600">{(freshnessScore * 100).toFixed(0)}%</span>
             </div>
           )}
         </div>

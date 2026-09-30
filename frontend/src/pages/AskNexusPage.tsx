@@ -29,10 +29,10 @@ export const AskNexusPage: React.FC = () => {
   const [selectedCitation, setSelectedCitation] = useState<Citation | null>(null);
 
   const exampleQuestions = [
-    'How does the Raft consensus algorithm handle leader election?',
-    'What is the purpose of write-ahead logging in storage engines?',
-    'What is the difference between LSM-trees and B+ trees?',
-    'How does Redis achieve high throughput with an in-memory architecture?',
+    'Summarize the main points and key takeaways.',
+    'What are the primary recommendations or conclusions?',
+    'What deadlines, dates, or milestones are mentioned?',
+    'Explain the most important concepts described in the files.',
   ];
 
   const handleAsk = async (queryToAsk: string = question) => {
@@ -140,7 +140,7 @@ export const AskNexusPage: React.FC = () => {
                 }
               }}
               rows={3}
-              placeholder="Ask any question (e.g. 'How does Raft elect leaders?') or type any word from your files (e.g. 'consensus', 'storage', 'budget')..."
+              placeholder="Ask any question in plain English (e.g. 'What are the main takeaways?') or type any keyword to find cited answers..."
               className="form-input resize-none"
             />
           </div>
