@@ -13,12 +13,23 @@ os.environ.setdefault("ENVIRONMENT", "production")
 
 from backend.app.main import app as backend_app
 
+_startup_done = False
+
 class VercelPathRewriter:
     """ASGI middleware that intercepts Vercel rewrites and restores target route."""
     def __init__(self, asgi_app):
         self.asgi_app = asgi_app
 
     async def __call__(self, scope, receive, send):
+        global _startup_done
+        if not _startup_done and scope.get("type") == "http":
+            _startup_done = True
+            try:
+                from backend.app.core.database import init_db
+                await init_db()
+            except Exception:
+                pass
+
         if scope.get("type") == "http":
             query_string = scope.get("query_string", b"").decode("utf-8")
             if "__route=" in query_string:

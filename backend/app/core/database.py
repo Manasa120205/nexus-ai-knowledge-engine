@@ -15,12 +15,29 @@ def get_engine():
     if is_sqlite and (os.environ.get("VERCEL") or not os.access(".", os.W_OK)):
         tmp_dir = os.environ.get("TMPDIR", "/tmp")
         tmp_db = os.path.join(tmp_dir, "nexus.db")
-        if not os.path.exists(tmp_db) and os.path.exists("nexus.db"):
+
+        # Search for bundled nexus.db across potential serverless working directories
+        curr_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(os.path.dirname(os.path.dirname(curr_dir)))
+        candidates = [
+            os.path.join(root_dir, "nexus.db"),
+            "/var/task/nexus.db",
+            os.path.join(os.getcwd(), "nexus.db"),
+            os.path.join(os.path.dirname(os.getcwd()), "nexus.db"),
+            "nexus.db",
+            "../nexus.db",
+        ]
+        source_db = next((c for c in candidates if c and os.path.exists(c) and os.path.getsize(c) > 0), None)
+
+        # Copy if tmp_db doesn't exist or if source_db has pre-seeded records
+        if source_db and (not os.path.exists(tmp_db) or os.path.getsize(tmp_db) < 4096):
             try:
                 import shutil
-                shutil.copyfile("nexus.db", tmp_db)
-            except Exception:
-                pass
+                shutil.copyfile(source_db, tmp_db)
+                logger.info(f"Loaded bundled database from {source_db} to {tmp_db}")
+            except Exception as e:
+                logger.warning(f"Could not copy bundled DB: {e}")
+
         db_url = f"sqlite+aiosqlite:///{tmp_db}"
 
     connect_args = {"check_same_thread": False} if is_sqlite else {}
