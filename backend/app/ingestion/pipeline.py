@@ -10,6 +10,7 @@ from backend.app.models.document import Document, DocumentChunk, DocumentVersion
 from backend.app.ingestion.chunker import chunker
 from backend.app.ingestion.pdf_extractor import PDFExtractor
 from backend.app.ingestion.youtube_extractor import YouTubeExtractor
+from backend.app.ingestion.text_cleaner import clean_extracted_text
 from backend.app.rag.embeddings import embedding_service
 from backend.app.retrieval.vector_store import vector_store
 from backend.app.retrieval.keyword_search import bm25_engine
@@ -113,7 +114,7 @@ class IngestionPipeline:
             elif source_type in ("text", "markdown"):
                 text_str = content_bytes.decode("utf-8", errors="replace")
                 elements = [{
-                    "text": text_str,
+                    "text": clean_extracted_text(text_str),
                     "page_number": None,
                     "section": "Main",
                     "timestamp_seconds": None,
@@ -121,9 +122,19 @@ class IngestionPipeline:
             else:
                 raise ValueError(f"Unsupported source type: {source_type}")
 
-            if not elements:
-                raise ValueError("No text could be extracted from the document.")
+            # Ensure all element texts are sanitized and non-empty
+            sanitized_elements = []
+            for elem in elements:
+                cleaned = clean_extracted_text(elem.get("text", ""))
+                if cleaned:
+                    elem_copy = dict(elem)
+                    elem_copy["text"] = cleaned
+                    sanitized_elements.append(elem_copy)
 
+            if not sanitized_elements:
+                raise ValueError("No readable text could be extracted from the document.")
+
+            elements = sanitized_elements
             job.progress_pct = 40
             await db.flush()
 

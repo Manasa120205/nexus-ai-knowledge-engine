@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Citation } from '../types';
 import { X, FileText, Video, Bookmark, Hash, Clock, CheckCircle } from 'lucide-react';
+import { cleanText } from '../utils/textUtils';
 
 interface CitationModalProps {
   citation: Citation | null;
@@ -112,7 +113,7 @@ export const CitationModal: React.FC<CitationModalProps> = ({ citation, onClose 
             Source Passage Excerpt
           </div>
           <div className="p-4 rounded-md bg-slate-50 border border-slate-200 text-sm leading-relaxed text-slate-800 font-sans whitespace-pre-wrap">
-            {citation.snippet}
+            {cleanText(citation.snippet)}
           </div>
         </div>
 

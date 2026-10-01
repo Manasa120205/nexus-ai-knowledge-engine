@@ -5,6 +5,7 @@ import { api } from '../api/client';
 import { SearchResultItem, AutocompleteSuggestion, Citation } from '../types';
 import { CitationModal } from '../components/CitationModal';
 import { UserTourModal } from '../components/UserTourModal';
+import { cleanText, getFocusedKeywordSnippet, renderHighlightedText } from '../utils/textUtils';
 import {
   Search,
   X,
@@ -96,7 +97,7 @@ export const SearchPage: React.FC = () => {
       page_number: item.page_number,
       timestamp_seconds: item.timestamp_seconds,
       section: item.section,
-      snippet: item.text,
+      snippet: cleanText(item.text),
       source_type: item.source_type,
     };
     setSelectedCitation(citation);
@@ -337,9 +338,12 @@ export const SearchPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Text Snippet */}
-              <p className="text-sm text-slate-800 leading-relaxed">
-                {item.text}
+              {/* Focused Keyword Snippet */}
+              <p className="text-sm text-slate-800 leading-relaxed font-sans">
+                {renderHighlightedText(
+                  getFocusedKeywordSnippet(item.snippet || item.text, query, 210),
+                  query
+                )}
               </p>
 
               {/* Actions */}

@@ -20,6 +20,7 @@ from backend.app.retrieval.keyword_search import bm25_engine
 from backend.app.retrieval.hybrid import hybrid_retriever
 from backend.app.retrieval.ranking import custom_ranker
 from backend.app.rag.embeddings import embedding_service
+from backend.app.ingestion.text_cleaner import extract_focused_keyword_snippet, clean_extracted_text
 
 router = APIRouter(prefix="/search", tags=["Search & Retrieval"])
 
@@ -96,9 +97,10 @@ async def search_documents(
     items: List[SearchResultItem] = []
     for c in candidates:
         meta = c.get("metadata", {})
-        text = meta.get("text", "")
-        # Generate snippet
-        snippet = text[:220] + "..." if len(text) > 220 else text
+        raw_text = meta.get("text", "")
+        text = clean_extracted_text(raw_text)
+        # Generate focused, keyword-centric snippet
+        snippet = extract_focused_keyword_snippet(text, req.query, max_chars=190)
 
         items.append(SearchResultItem(
             chunk_id=str(c.get("chunk_id") or meta.get("chunk_id") or meta.get("document_id", "unknown")),

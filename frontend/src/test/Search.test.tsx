@@ -44,6 +44,7 @@ describe('SearchPage Component', () => {
 
     const resultDoc = await screen.findByText(/Database Internals: Storage Engines/i);
     expect(resultDoc).toBeInTheDocument();
-    expect(screen.getByText(/The Write-Ahead Log \(WAL\) ensures ACID durability\./i)).toBeInTheDocument();
+    expect(screen.getByText(/Write-Ahead Log/i)).toBeInTheDocument();
+    expect(screen.getByText(/ACID durability/i)).toBeInTheDocument();
   });
 });

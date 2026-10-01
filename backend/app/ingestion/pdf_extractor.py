@@ -3,6 +3,7 @@ import re
 from typing import List, Dict, Any
 from pypdf import PdfReader
 from backend.app.core.logging import logger
+from backend.app.ingestion.text_cleaner import clean_extracted_text
 
 
 class PDFExtractor:
@@ -23,7 +24,7 @@ class PDFExtractor:
 
             for page_idx, page in enumerate(reader.pages, start=1):
                 raw_text = page.extract_text() or ""
-                clean_text = raw_text.strip()
+                clean_text = clean_extracted_text(raw_text)
                 if not clean_text:
                     continue
 

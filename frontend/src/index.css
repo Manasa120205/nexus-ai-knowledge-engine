@@ -11,6 +11,22 @@
     --text-muted: #64748b;
   }
 
+  /* Disable text selection and browser double-click highlight popups globally */
+  *, *::before, *::after {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection ONLY in text inputs, textareas, and explicit answer zones */
+  input, textarea, [contenteditable="true"], .allow-select, .selectable-text {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
   body {
     background-color: var(--bg-canvas);
     color: var(--text-primary);

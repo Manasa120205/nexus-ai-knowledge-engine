@@ -16,6 +16,24 @@ const queryClient = new QueryClient({
   },
 });
 
+// Suppress accidental browser double-click text selection across non-input UI
+if (typeof window !== 'undefined') {
+  document.addEventListener('dblclick', (e) => {
+    const target = e.target as HTMLElement | null;
+    if (
+      target &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable ||
+        target.closest('.allow-select') ||
+        target.closest('.selectable-text'))
+    ) {
+      return;
+    }
+    window.getSelection()?.removeAllRanges();
+  });
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

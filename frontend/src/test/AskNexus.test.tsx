@@ -55,6 +55,11 @@ describe('AskNexusPage Component', () => {
     const citationBtns = screen.getAllByRole('button', { name: /\[1\]/ });
     expect(citationBtns.length).toBeGreaterThanOrEqual(1);
 
+    // Verify Copy Answer button is rendered when answer is generated
+    const copyBtn = screen.getByRole('button', { name: /Copy Answer/i });
+    expect(copyBtn).toBeInTheDocument();
+    fireEvent.click(copyBtn);
+
     // Click inline citation badge to open CitationModal
     fireEvent.click(citationBtns[0]);
     expect(await screen.findByText(/Source Passage Excerpt/i)).toBeInTheDocument();
