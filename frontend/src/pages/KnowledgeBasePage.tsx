@@ -21,10 +21,8 @@ import {
   HelpCircle,
   Lock,
   Play,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
-import { PipelineExplainer } from '../components/PipelineExplainer';
+import { UserTourModal } from '../components/UserTourModal';
 
 export const KnowledgeBasePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -32,8 +30,7 @@ export const KnowledgeBasePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeModal, setActiveModal] = useState<'upload' | 'youtube' | null>(null);
   const [selectedDocChunks, setSelectedDocChunks] = useState<{ doc: DocumentItem; chunks: DocumentChunk[] } | null>(null);
-  const [showExplainerModal, setShowExplainerModal] = useState(false);
-  const [showExplainerInline, setShowExplainerInline] = useState(false);
+  const [showTourModal, setShowTourModal] = useState(false);
 
   // Form states
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -151,12 +148,12 @@ export const KnowledgeBasePage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowExplainerInline(!showExplainerInline)}
+            onClick={() => setShowTourModal(true)}
             className="btn-outline !text-xs text-slate-700 hover:text-indigo-600 border-slate-300"
-            title="Toggle search walkthrough"
+            title="View step-by-step user guide"
           >
             <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
-            <span>{showExplainerInline ? 'Hide Guide' : 'How Search Works'}</span>
+            <span>Guide</span>
           </button>
           <button
             onClick={() => { setActiveModal('upload'); setFormError(null); }}
@@ -174,13 +171,6 @@ export const KnowledgeBasePage: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Prominent Walkthrough Card matching page theme */}
-      {showExplainerInline && (
-        <div className="card p-5 sm:p-6 bg-white shadow-xs border border-slate-200/90 rounded-xl space-y-4">
-          <PipelineExplainer />
-        </div>
-      )}
 
       {/* Global Error Banner */}
       {docsError && (
@@ -527,10 +517,11 @@ export const KnowledgeBasePage: React.FC = () => {
         </div>
       )}
 
-      {/* Animated Pipeline Explainer Modal */}
-      {showExplainerModal && (
-        <PipelineExplainer isModal onClose={() => setShowExplainerModal(false)} />
-      )}
+      {/* Interactive User Tour Modal */}
+      <UserTourModal
+        isOpen={showTourModal}
+        onClose={() => setShowTourModal(false)}
+      />
     </div>
   );
 };

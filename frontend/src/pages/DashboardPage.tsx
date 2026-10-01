@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -16,15 +16,19 @@ import {
   RefreshCw,
   Play,
   BookOpen,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
-import { PipelineExplainer } from '../components/PipelineExplainer';
+import { UserTourModal } from '../components/UserTourModal';
 
 export const DashboardPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
-  const [showExplainerModal, setShowExplainerModal] = useState(false);
-  const [showExplainerInline, setShowExplainerInline] = useState(false);
+  const [showTourModal, setShowTourModal] = useState(false);
+
+  useEffect(() => {
+    const tourSeen = localStorage.getItem('nexus_tour_seen');
+    if (!tourSeen) {
+      setShowTourModal(true);
+    }
+  }, []);
 
   const { data: documents, isLoading: isDocsLoading, error: docsError, refetch: refetchDocs } = useQuery({
     queryKey: ['documents-list'],
@@ -85,7 +89,7 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Clear Purpose Card: What is NEXUS? */}
-      <div className="card p-5 sm:p-6 bg-white border border-slate-200/90 shadow-2xs space-y-3">
+      <div className="card p-5 sm:p-6 bg-white border border-slate-200/90 shadow-sm space-y-3">
         <div className="flex items-start gap-3.5">
           <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
             <BookOpen className="w-4 h-4" />
@@ -116,46 +120,22 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Animated Explainer Trigger Bar */}
+        {/* User Tour Action Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <HelpCircle className="w-4 h-4 text-indigo-600 shrink-0" />
-            <span>Curious about how documents are chunked, indexed, and retrieved?</span>
+            <span>Need a quick walkthrough of how you use NEXUS from your end?</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowExplainerInline(!showExplainerInline)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs transition-colors"
-            >
-              {showExplainerInline ? (
-                <>
-                  <ChevronUp className="w-3.5 h-3.5" />
-                  <span>Hide Explainer</span>
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="w-3.5 h-3.5" />
-                  <span>Show Interactive Tour</span>
-                </>
-              )}
-            </button>
-            <button
-              onClick={() => setShowExplainerModal(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors"
-            >
-              <Play className="w-3.5 h-3.5 fill-white" />
-              <span>Full Screen Tour</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowTourModal(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors"
+          >
+            <Play className="w-3.5 h-3.5 fill-white" />
+            <span>Start Interactive Tour</span>
+          </button>
         </div>
       </div>
-
-      {/* Inline Animated Explainer (if expanded) */}
-      {showExplainerInline && (
-        <div className="card p-6 border-slate-200 shadow-sm">
-          <PipelineExplainer />
-        </div>
-      )}
 
       {/* Error state with polite retry */}
       {docsError && (
@@ -358,10 +338,11 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* Full-screen explainer modal */}
-      {showExplainerModal && (
-        <PipelineExplainer isModal onClose={() => setShowExplainerModal(false)} />
-      )}
+      {/* Interactive User Tour Modal */}
+      <UserTourModal
+        isOpen={showTourModal}
+        onClose={() => setShowTourModal(false)}
+      />
     </div>
   );
 };

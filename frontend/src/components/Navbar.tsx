@@ -15,6 +15,7 @@ import {
   Sliders,
   CheckCircle,
 } from 'lucide-react';
+import { UserTourModal } from './UserTourModal';
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -22,6 +23,7 @@ export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [devDropdownOpen, setDevDropdownOpen] = useState(false);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
   const devDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -87,8 +89,19 @@ export const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* Right Section / Auth & Developer Dropdown */}
+        {/* Right Section / Auth, Help & Developer Dropdown */}
         <div className="hidden md:flex items-center gap-3">
+          {/* Help Button - User Guide & Interactive Tour */}
+          <button
+            type="button"
+            onClick={() => setHelpModalOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
+            title="How NEXUS Works (User Guide)"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Help</span>
+          </button>
+
           {isAuthenticated ? (
             <>
               {/* Developer / Benchmarks Menu (Subtle) */}
@@ -240,8 +253,29 @@ export const Navbar: React.FC = () => {
               </Link>
             </div>
           )}
+
+          {/* Mobile Help Button */}
+          <div className="pt-2 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => {
+                setHelpModalOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2 text-xs font-medium text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              <HelpCircle className="w-4 h-4 text-indigo-600" />
+              <span>How NEXUS Works (User Guide)</span>
+            </button>
+          </div>
         </div>
       )}
+
+      {/* Global Interactive User Tour Modal */}
+      <UserTourModal
+        isOpen={helpModalOpen}
+        onClose={() => setHelpModalOpen(false)}
+      />
     </header>
   );
 };

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { SearchResultItem, AutocompleteSuggestion, Citation } from '../types';
 import { CitationModal } from '../components/CitationModal';
-import { PipelineExplainer } from '../components/PipelineExplainer';
+import { UserTourModal } from '../components/UserTourModal';
 import {
   Search,
   X,
@@ -27,7 +27,7 @@ export const SearchPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCitation, setSelectedCitation] = useState<Citation | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [showExplainerModal, setShowExplainerModal] = useState(false);
+  const [showTourModal, setShowTourModal] = useState(false);
 
   // Autocomplete Trie state
   const [suggestions, setSuggestions] = useState<AutocompleteSuggestion[]>([]);
@@ -141,7 +141,7 @@ export const SearchPage: React.FC = () => {
         <div className="pt-0.5">
           <button
             type="button"
-            onClick={() => setShowExplainerModal(true)}
+            onClick={() => setShowTourModal(true)}
             className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
           >
             <HelpCircle className="w-3.5 h-3.5" />
@@ -243,12 +243,12 @@ export const SearchPage: React.FC = () => {
       {showAdvanced && (
         <div className="card p-4 bg-slate-50 border-slate-200 text-xs flex flex-wrap items-center gap-3">
           <span className="font-medium text-slate-700">Search Mode:</span>
-          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-2xs">
+          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
             <button
               type="button"
               onClick={() => setMode('ranked')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'ranked' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                mode === 'ranked' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Smart Search (Recommended)
@@ -257,7 +257,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('hybrid')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'hybrid' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                mode === 'hybrid' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Combined
@@ -266,7 +266,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('keyword')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'keyword' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                mode === 'keyword' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Exact Words
@@ -275,7 +275,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('vector')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'vector' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                mode === 'vector' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Meaning & Topic
@@ -365,10 +365,11 @@ export const SearchPage: React.FC = () => {
         />
       )}
 
-      {/* Pipeline Explainer Modal */}
-      {showExplainerModal && (
-        <PipelineExplainer isModal onClose={() => setShowExplainerModal(false)} />
-      )}
+      {/* Interactive User Tour Modal */}
+      <UserTourModal
+        isOpen={showTourModal}
+        onClose={() => setShowTourModal(false)}
+      />
     </div>
   );
 };
