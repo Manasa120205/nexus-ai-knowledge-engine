@@ -113,16 +113,16 @@ export const AskNexusPage: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
       {/* Header */}
       <div className="space-y-1 pb-4 border-b border-slate-200">
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Ask questions about your documents
         </h1>
-        <p className="text-sm text-slate-500">
-          Type any question in plain English or type a single keyword from your uploaded files. NEXUS finds the exact passages and gives you an immediate cited answer.
+        <p className="text-xs sm:text-sm text-slate-500">
+          Ask questions in natural language. Answers are verified with exact citations.
         </p>
       </div>
 
       {/* Question Form */}
-      <div className="card p-4 sm:p-5 space-y-4 shadow-sm">
+      <div className="card p-4 sm:p-5 space-y-4 shadow-xs">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -140,7 +140,7 @@ export const AskNexusPage: React.FC = () => {
                 }
               }}
               rows={3}
-              placeholder="Ask any question in plain English (e.g. 'What are the main takeaways?') or type any keyword to find cited answers..."
+              placeholder="Ask any question in plain English (e.g. 'What are the main takeaways?')..."
               className="form-input resize-none"
             />
           </div>

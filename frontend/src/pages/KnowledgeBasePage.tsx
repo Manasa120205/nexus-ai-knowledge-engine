@@ -143,9 +143,9 @@ export const KnowledgeBasePage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Your Documents</h1>
-          <p className="text-sm text-slate-600">
-            Upload your PDFs, notes, or YouTube transcripts. Search for any word or ask questions to get exact answers.
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Documents</h1>
+          <p className="text-xs sm:text-sm text-slate-500">
+            Upload and manage your technical knowledge sources.
           </p>
         </div>
 

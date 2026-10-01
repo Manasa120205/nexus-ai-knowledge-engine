@@ -22,54 +22,54 @@ interface PipelineExplainerProps {
 const STAGES = [
   {
     id: 1,
-    title: '1. Upload & Organize Document',
-    shortTitle: '1. Upload & Read',
+    title: '1. Ingest & Parse',
+    shortTitle: '1. Ingest',
     icon: FileText,
     description:
-      'Upload your PDF, text notes, or YouTube transcript. NEXUS reads the entire document and divides it into clean, readable sections without cutting off sentences.',
+      'Upload PDFs, Markdown, or transcripts. Documents are parsed into clean structured sections.',
     metrics: [
-      { label: 'Supported Files', value: 'PDF, Text, YouTube' },
-      { label: 'Section Size', value: '2-3 Paragraphs' },
-      { label: 'Keeps Structure', value: 'Headings & Tables' },
+      { label: 'Formats', value: 'PDF, Docs, YouTube' },
+      { label: 'Chunking', value: 'Semantic paragraphs' },
+      { label: 'Integrity', value: 'Preserves tables' },
     ],
   },
   {
     id: 2,
-    title: '2. Instant Keyword & Topic Indexing',
-    shortTitle: '2. Keyword Index',
+    title: '2. Dual-Engine Indexing',
+    shortTitle: '2. Indexing',
     icon: Database,
     description:
-      'Every single word is indexed so you can find exact terms immediately. At the same time, the meaning of each sentence is mapped so searches also find related topics.',
+      'Generates BM25 keyword indices and dense semantic embeddings simultaneously for instant lookup.',
     metrics: [
-      { label: 'Word Search', value: 'Exact spelling match' },
-      { label: 'Topic Search', value: 'Understands meaning' },
-      { label: 'Speed', value: 'Instant (< 0.1s)' },
+      { label: 'Keyword', value: 'Exact BM25' },
+      { label: 'Semantic', value: 'Vector embeddings' },
+      { label: 'Latency', value: '< 20ms' },
     ],
   },
   {
     id: 3,
-    title: '3. Finding the Best Matching Sections',
-    shortTitle: '3. Find Matches',
+    title: '3. Hybrid Retrieval & Rank',
+    shortTitle: '3. Retrieval',
     icon: Search,
     description:
-      'When you search or ask a question, the system scans through all your documents in milliseconds and ranks the most relevant paragraphs first.',
+      'Combines reciprocal rank fusion (RRF) and cross-encoder re-ranking for top-5 precision.',
     metrics: [
-      { label: 'Ranking', value: 'Best matches first' },
-      { label: 'Search Method', value: 'Words + Context' },
-      { label: 'Accuracy', value: 'Filters irrelevant text' },
+      { label: 'Method', value: 'Hybrid RRF' },
+      { label: 'Ranking', value: 'Cross-encoder' },
+      { label: 'Precision', value: 'Top relevant passages' },
     ],
   },
   {
     id: 4,
-    title: '4. Clear Answers with Page Citations',
-    shortTitle: '4. Cited Answers',
+    title: '4. Grounded Synthesis & Citations',
+    shortTitle: '4. Citations',
     icon: CheckCircle2,
     description:
-      'Instead of guessing or making things up, NEXUS answers using only the sentences in your files. Every statement includes a clickable citation [1], [2] pointing to the exact page.',
+      'Answers are synthesized strictly from retrieved passages, with clickable citations pointing to the exact page.',
     metrics: [
-      { label: 'Evidence', value: '100% from your files' },
-      { label: 'Citations', value: 'Clickable page notes [1]' },
-      { label: 'Verification', value: 'Inspect original source' },
+      { label: 'Grounding', value: '100% verified sources' },
+      { label: 'Citations', value: 'Clickable page notes' },
+      { label: 'Hallucination', value: 'Eliminated' },
     ],
   },
 ];
@@ -214,14 +214,14 @@ export const PipelineExplainer: React.FC<PipelineExplainerProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium mb-1.5">
-            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Interactive Guide</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Interactive Architecture</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             How NEXUS Searches Your Documents
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-            A simple walkthrough showing how your files are uploaded, organized, and retrieved.
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Four-stage pipeline: ingestion, dual indexing, hybrid ranking, and cited generation.
           </p>
         </div>
 

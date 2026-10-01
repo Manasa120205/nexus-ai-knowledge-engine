@@ -23,7 +23,7 @@
 
 /* Reusable UI Components */
 .card {
-  @apply bg-white border border-slate-200 rounded-lg shadow-sm transition-all;
+  @apply bg-white border border-slate-200 rounded-xl shadow-sm transition-all;
 }
 
 .card-hover {

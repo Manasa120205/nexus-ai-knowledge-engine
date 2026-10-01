@@ -132,11 +132,11 @@ export const SearchPage: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
       {/* Header */}
       <div className="text-center space-y-2 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Search your knowledge
         </h1>
-        <p className="text-sm text-slate-500">
-          Find exact terms, technical concepts, or paragraphs across your uploaded documents.
+        <p className="text-xs sm:text-sm text-slate-500">
+          Instant keyword and semantic retrieval across all documents.
         </p>
         <div className="pt-0.5">
           <button
@@ -145,13 +145,13 @@ export const SearchPage: React.FC = () => {
             className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
           >
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>How does search work? (Watch Quick Tour)</span>
+            <span>How Search Works</span>
           </button>
         </div>
       </div>
 
       {/* Main Search Input Box */}
-      <div className="card p-2 sm:p-3 relative shadow-md" ref={autocompleteRef}>
+      <div className="card p-2 sm:p-2.5 relative shadow-xs" ref={autocompleteRef}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -161,7 +161,7 @@ export const SearchPage: React.FC = () => {
         >
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4" />
             </div>
             <input
               type="text"
@@ -170,9 +170,9 @@ export const SearchPage: React.FC = () => {
               onFocus={() => {
                 if (suggestions.length > 0) setIsAutocompleteOpen(true);
               }}
-              placeholder="Type any word or phrase from your documents (e.g. storage, consensus, budget, raft)..."
-              style={{ paddingLeft: '3.5rem' }}
-              className="w-full pr-10 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
+              placeholder="Type any word or phrase from your documents..."
+              style={{ paddingLeft: '3rem' }}
+              className="w-full pr-10 py-2.5 bg-transparent text-slate-900 placeholder-slate-400 text-sm focus:outline-none"
             />
             {query && (
               <button

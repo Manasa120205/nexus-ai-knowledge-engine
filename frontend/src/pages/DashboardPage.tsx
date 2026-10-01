@@ -68,11 +68,6 @@ export const DashboardPage: React.FC = () => {
             </Link>
           </div>
         </div>
-
-        {/* Interactive Tour for new visitors */}
-        <div className="pt-6 border-t border-slate-200">
-          <PipelineExplainer />
-        </div>
       </div>
     );
   }
@@ -81,11 +76,11 @@ export const DashboardPage: React.FC = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Top Welcome Banner */}
       <div className="space-y-1 pb-4 border-b border-slate-200">
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Welcome back, {displayName}
         </h1>
-        <p className="text-sm text-slate-600">
-          Your private research assistant for technical documents, notes, and study material.
+        <p className="text-xs sm:text-sm text-slate-500">
+          Knowledge workspace and retrieval overview.
         </p>
       </div>
 
