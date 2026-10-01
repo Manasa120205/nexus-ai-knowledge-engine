@@ -83,5 +83,25 @@ async def init_db() -> None:
             from backend.app.models import user, document, query, evaluation  # noqa
             await conn.run_sync(Base.metadata.create_all)
         logger.info("Database schema initialized successfully.")
+
+        # Seed default test user if missing
+        try:
+            async with AsyncSessionLocal() as session:
+                from sqlalchemy import select
+                from backend.app.models.user import User
+                from backend.app.security.auth import hash_password
+                res = await session.execute(select(User).where(User.email == "demo@nexus.ai"))
+                if not res.scalar_one_or_none():
+                    demo_user = User(
+                        email="demo@nexus.ai",
+                        hashed_password=hash_password("DemoPass123!"),
+                        full_name="NEXUS Demo User",
+                        is_active=True,
+                    )
+                    session.add(demo_user)
+                    await session.commit()
+                    logger.info("Default demo user demo@nexus.ai initialized.")
+        except Exception as seed_err:
+            logger.warning(f"Demo user seed notice: {seed_err}")
     except Exception as e:
         logger.error(f"Error initializing database schema: {e}")

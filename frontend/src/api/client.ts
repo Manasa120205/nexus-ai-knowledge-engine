@@ -83,8 +83,16 @@ class ApiClient {
     if (!response.ok) {
       let errorMessage = `Request failed with status ${response.status}`;
       try {
-        const errorData = await response.json();
-        errorMessage = errorData.detail || errorData.message || errorMessage;
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+        } else {
+          const text = await response.text();
+          if (text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+            errorMessage = 'Backend service is starting up or temporarily unavailable. Please retry in a moment.';
+          }
+        }
       } catch {
         // use default status message
       }
@@ -95,7 +103,21 @@ class ApiClient {
       return {} as T;
     }
 
-    return response.json();
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      return response.json();
+    }
+
+    const rawText = await response.text();
+    if (rawText.startsWith('<!DOCTYPE') || rawText.startsWith('<html')) {
+      throw new Error('API server returned HTML instead of JSON. The backend service may be initializing.');
+    }
+
+    try {
+      return JSON.parse(rawText);
+    } catch {
+      return {} as T;
+    }
   }
 
   // --- Auth Endpoints ---
