@@ -22,15 +22,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('nexus_access_token');
+      const cachedUser = localStorage.getItem('nexus_user_profile');
+      if (cachedUser) {
+        try {
+          setUser(JSON.parse(cachedUser));
+        } catch {
+          // ignore parsing error
+        }
+      }
+
       if (storedToken) {
         try {
           const profile = await api.getMe();
           setUser(profile);
           setToken(storedToken);
-        } catch {
-          localStorage.removeItem('nexus_access_token');
-          setToken(null);
-          setUser(null);
+          localStorage.setItem('nexus_user_profile', JSON.stringify(profile));
+        } catch (err: any) {
+          const msg = (err?.message || '').toLowerCase();
+          // Only clear credentials if backend explicitly reports authentication failure (401 or invalid token)
+          if (msg.includes('401') || msg.includes('unauthorized') || msg.includes('invalid credentials') || msg.includes('invalid token')) {
+            localStorage.removeItem('nexus_access_token');
+            localStorage.removeItem('nexus_user_profile');
+            setToken(null);
+            setUser(null);
+          } else {
+            // Network latency, cold start, or temporary connection glitch: preserve active session
+            setToken(storedToken);
+          }
         }
       }
       setIsLoading(false);
@@ -48,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const authData = await api.login(formData);
       localStorage.setItem('nexus_access_token', authData.access_token);
+      localStorage.setItem('nexus_user_profile', JSON.stringify(authData.user));
       setToken(authData.access_token);
       setUser(authData.user);
     } finally {
@@ -68,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem('nexus_access_token');
+    localStorage.removeItem('nexus_user_profile');
     setToken(null);
     setUser(null);
   };

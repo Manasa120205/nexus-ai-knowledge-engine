@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AskNexusPage } from '../pages/AskNexusPage';
 import { api } from '../api/client';
 
@@ -31,12 +32,20 @@ describe('AskNexusPage Component', () => {
       sufficient_evidence: true,
     });
 
+    const testQueryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+      },
+    });
+
     localStorage.setItem('nexus_access_token', 'mock_token');
 
     render(
-      <BrowserRouter>
-        <AskNexusPage />
-      </BrowserRouter>
+      <QueryClientProvider client={testQueryClient}>
+        <BrowserRouter>
+          <AskNexusPage />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
 
     expect(screen.getByText(/Ask questions about your documents/i)).toBeInTheDocument();

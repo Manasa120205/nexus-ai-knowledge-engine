@@ -1,7 +1,7 @@
 import os
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status, Query
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.config import settings
@@ -139,12 +139,19 @@ async def list_documents(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    List all documents owned by the authenticated user with chunk counts.
-    Strictly isolated to current user.
+    List all documents owned by the authenticated user with chunk counts,
+    including shared foundational knowledge base documents so accounts always have access to data.
     """
+    DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
     stmt = (
         select(Document)
-        .where(Document.user_id == current_user.id)
+        .where(
+            or_(
+                Document.user_id == current_user.id,
+                Document.user_id == DEMO_USER_ID,
+                Document.user_id == "system",
+            )
+        )
         .order_by(Document.created_at.desc())
         .offset(skip)
         .limit(limit)
@@ -153,7 +160,11 @@ async def list_documents(
     documents = result.scalars().all()
 
     responses = []
+    seen_titles = set()
     for d in documents:
+        if d.title in seen_titles:
+            continue
+        seen_titles.add(d.title)
         cnt_res = await db.execute(
             select(func.count(DocumentChunk.id)).where(DocumentChunk.document_id == d.id)
         )
@@ -171,8 +182,16 @@ async def get_document(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Retrieve document details by ID, enforcing user isolation."""
-    stmt = select(Document).where(Document.id == document_id, Document.user_id == current_user.id)
+    """Retrieve document details by ID, enforcing user isolation or shared knowledge access."""
+    DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
+    stmt = select(Document).where(
+        Document.id == document_id,
+        or_(
+            Document.user_id == current_user.id,
+            Document.user_id == DEMO_USER_ID,
+            Document.user_id == "system",
+        )
+    )
     result = await db.execute(stmt)
     doc = result.scalar_one_or_none()
 
@@ -195,9 +214,17 @@ async def get_document_chunks(
     db: AsyncSession = Depends(get_db),
 ):
     """List structural chunks for a specific document."""
-    # Verify ownership
+    DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
+    # Verify ownership or shared knowledge access
     doc_res = await db.execute(
-        select(Document).where(Document.id == document_id, Document.user_id == current_user.id)
+        select(Document).where(
+            Document.id == document_id,
+            or_(
+                Document.user_id == current_user.id,
+                Document.user_id == DEMO_USER_ID,
+                Document.user_id == "system",
+            )
+        )
     )
     if not doc_res.scalar_one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found.")

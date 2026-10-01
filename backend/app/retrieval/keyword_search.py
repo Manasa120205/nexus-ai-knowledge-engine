@@ -112,12 +112,15 @@ class BM25SearchEngine:
             if idf <= 0:
                 idf = 1e-4
 
+            FOUNDATIONAL_USER_IDS = {"3ccdcc89-d39c-4b6c-b2a9-05669881d0e5", "system", "anonymous_demo_user", None, ""}
             for chunk_id, tf in posting.items():
                 meta = self.doc_metadata.get(chunk_id, {})
                 if filter_doc_id and meta.get("document_id") != filter_doc_id:
                     continue
-                if filter_user_id and meta.get("user_id") != filter_user_id:
-                    continue
+                if filter_user_id:
+                    chunk_uid = meta.get("user_id")
+                    if chunk_uid != filter_user_id and chunk_uid not in FOUNDATIONAL_USER_IDS:
+                        continue
 
                 d_len = self.doc_len.get(chunk_id, 1)
                 # BM25 TF normalization
@@ -134,11 +137,14 @@ class BM25SearchEngine:
         # Fallback: if no scores were accumulated from inverted index, check direct text containment
         if not scores:
             clean_query = query.strip().lower()
+            FOUNDATIONAL_USER_IDS = {"3ccdcc89-d39c-4b6c-b2a9-05669881d0e5", "system", "anonymous_demo_user", None, ""}
             for chunk_id, meta in self.doc_metadata.items():
                 if filter_doc_id and meta.get("document_id") != filter_doc_id:
                     continue
-                if filter_user_id and meta.get("user_id") != filter_user_id:
-                    continue
+                if filter_user_id:
+                    chunk_uid = meta.get("user_id")
+                    if chunk_uid != filter_user_id and chunk_uid not in FOUNDATIONAL_USER_IDS:
+                        continue
 
                 chunk_text = meta.get("text", "").lower()
                 chunk_title = meta.get("document_title", "").lower()

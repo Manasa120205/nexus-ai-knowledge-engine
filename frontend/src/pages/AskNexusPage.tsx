@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { RAGResponse, Citation } from '../types';
@@ -21,7 +22,8 @@ import {
 import { cleanText } from '../utils/textUtils';
 
 export const AskNexusPage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
   const location = useLocation();
   const initialQuery = (location.state as any)?.query || '';
 
@@ -75,6 +77,34 @@ export const AskNexusPage: React.FC = () => {
         top_k: 5,
       });
       setResponse(resp);
+
+      // Invalidate queries so dashboard and query history update immediately
+      queryClient.invalidateQueries({ queryKey: ['query-history'] });
+      if (user?.email) {
+        queryClient.invalidateQueries({ queryKey: ['query-history', user.email] });
+        queryClient.invalidateQueries({ queryKey: ['query-history', user.email, 0, 10] });
+
+        // Prepend to user's local cache
+        try {
+          const histKey = `nexus_history_${user.email}`;
+          const cached = localStorage.getItem(histKey);
+          const list = cached ? JSON.parse(cached) : [];
+          const newItem = {
+            id: 'local_' + Date.now(),
+            query_text: queryToAsk,
+            mode: 'ranked',
+            response_text: resp.answer,
+            cache_hit: resp.cache_hit,
+            latency_ms: resp.latency_ms,
+            citations_count: resp.citations?.length || 0,
+            created_at: new Date().toISOString(),
+          };
+          const updated = [newItem, ...list.filter((x: any) => x.query_text !== queryToAsk)].slice(0, 50);
+          localStorage.setItem(histKey, JSON.stringify(updated));
+        } catch {
+          // ignore cache error
+        }
+      }
     } catch (err: any) {
       setErrorMessage(
         err.message || 'Something went wrong while generating an answer. Your documents are still safe.'

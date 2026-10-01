@@ -25,7 +25,7 @@ import {
 import { UserTourModal } from '../components/UserTourModal';
 
 export const KnowledgeBasePage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeModal, setActiveModal] = useState<'upload' | 'youtube' | null>(null);
@@ -39,10 +39,26 @@ export const KnowledgeBasePage: React.FC = () => {
   const [youtubeTitle, setYouTubeTitle] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Fetch documents (only when authenticated)
-  const { data: documents = [], isLoading, error: docsError, refetch } = useQuery({
-    queryKey: ['documents'],
-    queryFn: () => api.listDocuments(),
+  const docCacheKey = user?.email ? `nexus_docs_${user.email}` : 'nexus_docs_guest';
+
+  // Fetch documents (only when authenticated) with local cache preservation
+  const { data: documents = [], isLoading, error: docsError, refetch } = useQuery<DocumentItem[]>({
+    queryKey: ['documents', user?.email],
+    queryFn: async () => {
+      const docs = await api.listDocuments();
+      if (docs && docs.length > 0 && user?.email) {
+        localStorage.setItem(docCacheKey, JSON.stringify(docs));
+      }
+      return docs;
+    },
+    initialData: () => {
+      try {
+        const cached = localStorage.getItem(docCacheKey);
+        return cached ? (JSON.parse(cached) as DocumentItem[]) : ([] as DocumentItem[]);
+      } catch {
+        return [] as DocumentItem[];
+      }
+    },
     enabled: isAuthenticated,
     refetchInterval: isAuthenticated ? 10000 : false,
   });
@@ -56,6 +72,10 @@ export const KnowledgeBasePage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] });
       queryClient.invalidateQueries({ queryKey: ['documents-list'] });
+      if (user?.email) {
+        queryClient.invalidateQueries({ queryKey: ['documents', user.email] });
+        queryClient.invalidateQueries({ queryKey: ['documents-list', user.email] });
+      }
       setActiveModal(null);
       setUploadFile(null);
       setUploadTitle('');
@@ -75,6 +95,10 @@ export const KnowledgeBasePage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] });
       queryClient.invalidateQueries({ queryKey: ['documents-list'] });
+      if (user?.email) {
+        queryClient.invalidateQueries({ queryKey: ['documents', user.email] });
+        queryClient.invalidateQueries({ queryKey: ['documents-list', user.email] });
+      }
       setActiveModal(null);
       setYouTubeUrl('');
       setYouTubeTitle('');
@@ -91,6 +115,10 @@ export const KnowledgeBasePage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] });
       queryClient.invalidateQueries({ queryKey: ['documents-list'] });
+      if (user?.email) {
+        queryClient.invalidateQueries({ queryKey: ['documents', user.email] });
+        queryClient.invalidateQueries({ queryKey: ['documents-list', user.email] });
+      }
     },
   });
 

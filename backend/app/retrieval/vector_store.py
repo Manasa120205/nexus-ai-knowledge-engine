@@ -80,13 +80,16 @@ class VectorStore:
         # Matrix dot product (N,)
         similarities = np.dot(self._vectors, q_arr)
 
+        FOUNDATIONAL_USER_IDS = {"3ccdcc89-d39c-4b6c-b2a9-05669881d0e5", "system", "anonymous_demo_user", None, ""}
         results = []
         for i, cid in enumerate(self._chunk_ids):
             meta = self._metadata.get(cid, {})
             if filter_doc_id and meta.get("document_id") != filter_doc_id:
                 continue
-            if filter_user_id and meta.get("user_id") != filter_user_id:
-                continue
+            if filter_user_id:
+                chunk_uid = meta.get("user_id")
+                if chunk_uid != filter_user_id and chunk_uid not in FOUNDATIONAL_USER_IDS:
+                    continue
 
             score = float(similarities[i])
             # Clamp to [0.0, 1.0]

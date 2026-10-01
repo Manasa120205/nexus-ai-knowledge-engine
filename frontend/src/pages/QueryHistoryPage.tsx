@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
+import { QueryHistoryItem } from '../types';
 import {
   History,
   Trash2,
@@ -14,13 +15,29 @@ import {
 } from 'lucide-react';
 
 export const QueryHistoryPage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { data: history = [], isLoading } = useQuery({
-    queryKey: ['query-history'],
-    queryFn: () => api.getHistory(0, 100),
+  const histCacheKey = user?.email ? `nexus_history_${user.email}` : 'nexus_history_guest';
+
+  const { data: history = [], isLoading } = useQuery<QueryHistoryItem[]>({
+    queryKey: ['query-history', user?.email],
+    queryFn: async () => {
+      const hist = await api.getHistory(0, 100);
+      if (hist && hist.length > 0 && user?.email) {
+        localStorage.setItem(histCacheKey, JSON.stringify(hist));
+      }
+      return hist;
+    },
+    initialData: () => {
+      try {
+        const cached = localStorage.getItem(histCacheKey);
+        return cached ? (JSON.parse(cached) as QueryHistoryItem[]) : ([] as QueryHistoryItem[]);
+      } catch {
+        return [] as QueryHistoryItem[];
+      }
+    },
     enabled: isAuthenticated,
   });
 
@@ -28,7 +45,8 @@ export const QueryHistoryPage: React.FC = () => {
     mutationFn: (id: string) => api.deleteHistoryItem(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['query-history'] });
-      queryClient.invalidateQueries({ queryKey: ['query-history', 0, 5] });
+      queryClient.invalidateQueries({ queryKey: ['query-history', user?.email] });
+      queryClient.invalidateQueries({ queryKey: ['query-history', user?.email, 0, 10] });
     },
   });
 
