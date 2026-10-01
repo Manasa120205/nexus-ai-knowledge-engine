@@ -112,7 +112,7 @@ export const KnowledgeBasePage: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
-        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto text-blue-600 shadow-sm">
           <Lock className="w-7 h-7" />
         </div>
         <div className="space-y-2">
@@ -149,10 +149,10 @@ export const KnowledgeBasePage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowTourModal(true)}
-            className="btn-outline !text-xs text-slate-700 hover:text-indigo-600 border-slate-300"
+            className="btn-outline !text-xs text-slate-700 hover:text-blue-600 border-slate-300"
             title="View step-by-step user guide"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
             <span>Guide</span>
           </button>
           <button
@@ -198,7 +198,7 @@ export const KnowledgeBasePage: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ paddingLeft: '3.25rem' }}
-            className="w-full pr-10 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow shadow-sm"
+            className="w-full pr-10 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow shadow-sm"
           />
           {searchTerm && (
             <button
@@ -220,7 +220,7 @@ export const KnowledgeBasePage: React.FC = () => {
       <div className="card overflow-hidden">
         {isLoading ? (
           <div className="p-12 text-center text-sm text-slate-500 flex items-center justify-center gap-2">
-            <RefreshCw className="w-4 h-4 animate-spin text-indigo-600" />
+            <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
             Loading documents...
           </div>
         ) : filteredDocs.length === 0 ? (

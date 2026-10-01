@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   UploadCloud,
   Search,
@@ -9,7 +9,6 @@ import {
   ArrowLeft,
   FileText,
   ExternalLink,
-  Sparkles,
 } from 'lucide-react';
 
 interface UserTourModalProps {
@@ -28,8 +27,8 @@ const TOUR_STEPS = [
     tip: 'Your documents remain 100% private to your account.',
     renderPreview: () => (
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 space-y-3">
-        <div className="border-2 border-dashed border-indigo-200 bg-white rounded-lg p-5 text-center space-y-2">
-          <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+        <div className="border-2 border-dashed border-slate-300 bg-white rounded-lg p-5 text-center space-y-2">
+          <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
             <UploadCloud className="w-5 h-5" />
           </div>
           <div className="text-xs font-semibold text-slate-800">
@@ -41,7 +40,7 @@ const TOUR_STEPS = [
         </div>
         <div className="flex items-center justify-between text-xs bg-white p-2.5 rounded-lg border border-slate-200">
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-indigo-600" />
+            <FileText className="w-4 h-4 text-blue-600" />
             <span className="font-medium text-slate-800">Architecture_Spec.pdf</span>
             <span className="text-[10px] text-slate-400">• 1.4 MB</span>
           </div>
@@ -64,7 +63,7 @@ const TOUR_STEPS = [
         <div className="bg-white border border-slate-300 rounded-lg p-2.5 flex items-center gap-2 shadow-sm">
           <Search className="w-4 h-4 text-slate-400" />
           <span className="text-xs text-slate-800 font-medium">write-ahead log</span>
-          <span className="ml-auto text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded font-mono">
+          <span className="ml-auto text-[10px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono font-medium border border-slate-200">
             8 results (12ms)
           </span>
         </div>
@@ -97,7 +96,7 @@ const TOUR_STEPS = [
             "What happens during leader failure in the consensus protocol?"
           </div>
           <div className="flex justify-end">
-            <span className="bg-indigo-600 text-white text-[11px] px-3 py-1 rounded-md font-medium">
+            <span className="bg-blue-600 text-white text-[11px] px-3 py-1 rounded-md font-medium">
               Ask Question
             </span>
           </div>
@@ -121,16 +120,16 @@ const TOUR_STEPS = [
           </div>
           <p className="text-slate-800 text-xs leading-relaxed">
             When a leader fails, a follower initiates a new election term{' '}
-            <span className="inline-flex items-center px-1.5 py-0.2 bg-indigo-100 text-indigo-700 font-semibold rounded text-[11px] border border-indigo-200">
+            <span className="inline-flex items-center px-1.5 py-0.2 bg-blue-50 text-blue-700 font-semibold rounded text-[11px] border border-blue-200">
               [1]
             </span>
             . The candidate requesting votes must have an up-to-date log{' '}
-            <span className="inline-flex items-center px-1.5 py-0.2 bg-indigo-100 text-indigo-700 font-semibold rounded text-[11px] border border-indigo-200">
+            <span className="inline-flex items-center px-1.5 py-0.2 bg-blue-50 text-blue-700 font-semibold rounded text-[11px] border border-blue-200">
               [2]
             </span>
             .
           </p>
-          <div className="pt-1 text-[11px] text-indigo-600 font-medium flex items-center gap-1">
+          <div className="pt-1 text-[11px] text-blue-600 font-medium flex items-center gap-1">
             <span>Click any citation tag to view the exact page</span>
             <ExternalLink className="w-3 h-3" />
           </div>
@@ -146,6 +145,22 @@ export const UserTourModal: React.FC<UserTourModalProps> = ({
   onNavigate,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Prevent background scrolling completely while modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = '';
+      };
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -176,13 +191,18 @@ export const UserTourModal: React.FC<UserTourModalProps> = ({
           onClose();
         }
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150 overscroll-contain"
+      style={{ touchAction: 'none' }}
     >
-      <div className="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div
+        className="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-xl overflow-hidden flex flex-col max-h-[88vh] overscroll-contain"
+        style={{ touchAction: 'auto' }}
+        onWheel={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs border border-blue-100">
               ?
             </div>
             <div>
@@ -190,7 +210,7 @@ export const UserTourModal: React.FC<UserTourModalProps> = ({
                 How NEXUS Works
               </h2>
               <p className="text-[11px] text-slate-500">
-                Quick 4-step user guide
+                Step-by-step user guide
               </p>
             </div>
           </div>
@@ -206,11 +226,14 @@ export const UserTourModal: React.FC<UserTourModalProps> = ({
           </button>
         </div>
 
-        {/* Body */}
-        <div className="p-6 space-y-4 overflow-y-auto">
+        {/* Body - scrolls smoothly inside without affecting background */}
+        <div
+          className="p-6 space-y-4 overflow-y-auto overscroll-contain"
+          onWheel={(e) => e.stopPropagation()}
+        >
           {/* Step Indicator */}
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full">
               {stepData.badge}
             </span>
             <div className="flex items-center gap-1.5">
@@ -220,7 +243,7 @@ export const UserTourModal: React.FC<UserTourModalProps> = ({
                   onClick={() => setCurrentStep(i)}
                   className={`w-2 h-2 rounded-full transition-all ${
                     i === currentStep
-                      ? 'w-6 bg-indigo-600'
+                      ? 'w-6 bg-blue-600'
                       : i < currentStep
                       ? 'bg-slate-400'
                       : 'bg-slate-200'

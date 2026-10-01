@@ -35,7 +35,7 @@ export const LoginPage: React.FC = () => {
       <div className="card p-8 max-w-md w-full space-y-6 shadow-md border-slate-200">
         {/* Brand Header */}
         <div className="text-center space-y-1">
-          <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white font-bold text-lg flex items-center justify-center mx-auto shadow-sm">
+          <div className="w-10 h-10 rounded-lg bg-blue-600 text-white font-bold text-lg flex items-center justify-center mx-auto shadow-sm">
             N
           </div>
           <h1 className="text-xl font-bold text-slate-900 pt-2">Sign in to NEXUS</h1>
@@ -121,7 +121,7 @@ export const LoginPage: React.FC = () => {
         <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
           <div>
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-700">
+            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700">
               Register here
             </Link>
           </div>
@@ -155,7 +155,7 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCustomApiUrl(customUrlInput)}
-                  className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-medium"
+                  className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium"
                 >
                   Save
                 </button>

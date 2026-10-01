@@ -43,7 +43,7 @@ export const QueryHistoryPage: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
-        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto text-blue-600 shadow-sm">
           <History className="w-7 h-7" />
         </div>
         <div className="space-y-2">
@@ -95,7 +95,7 @@ export const QueryHistoryPage: React.FC = () => {
       {/* History List */}
       {isLoading ? (
         <div className="card p-12 text-center text-sm text-slate-500 flex items-center justify-center gap-2">
-          <RefreshCw className="w-4 h-4 animate-spin text-indigo-600" />
+          <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
           Loading question history...
         </div>
       ) : history.length === 0 ? (

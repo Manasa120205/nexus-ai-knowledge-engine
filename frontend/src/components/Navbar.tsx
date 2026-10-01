@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
         {/* Logo & Brand */}
         <div className="flex items-center gap-8">
           <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-md bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
+            <div className="w-8 h-8 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
               N
             </div>
             <span className="font-bold text-lg text-slate-900 tracking-tight">
@@ -76,7 +76,7 @@ export const Navbar: React.FC = () => {
                     to={item.path}
                     className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-slate-100 text-indigo-700 font-semibold'
+                        ? 'bg-slate-100 text-blue-700 font-semibold'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
                   >
@@ -95,10 +95,10 @@ export const Navbar: React.FC = () => {
           <button
             type="button"
             onClick={() => setHelpModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors"
             title="How NEXUS Works (User Guide)"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
             <span>Help</span>
           </button>
 
@@ -123,13 +123,13 @@ export const Navbar: React.FC = () => {
                   >
                     <Link
                       to="/evaluation"
-                      className="block px-3 py-2 text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+                      className="block px-3 py-2 text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                     >
                       Evaluation & Benchmarks
                     </Link>
                     <Link
                       to="/system"
-                      className="block px-3 py-2 text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+                      className="block px-3 py-2 text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                     >
                       System & Health Status
                     </Link>
@@ -202,7 +202,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium ${
                       isActive
-                        ? 'bg-slate-100 text-indigo-700 font-semibold'
+                        ? 'bg-slate-100 text-blue-700 font-semibold'
                         : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
@@ -262,9 +262,9 @@ export const Navbar: React.FC = () => {
                 setHelpModalOpen(true);
                 setMobileMenuOpen(false);
               }}
-              className="w-full flex items-center justify-center gap-2 py-2 text-xs font-medium text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-2 text-xs font-medium text-slate-600 hover:text-blue-600 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors"
             >
-              <HelpCircle className="w-4 h-4 text-indigo-600" />
+              <HelpCircle className="w-4 h-4 text-blue-600" />
               <span>How NEXUS Works (User Guide)</span>
             </button>
           </div>

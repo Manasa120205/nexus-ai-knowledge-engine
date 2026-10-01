@@ -28,7 +28,7 @@ export const SystemPage: React.FC = () => {
   if (isMetricsLoading || isHealthLoading) {
     return (
       <div className="py-12 flex justify-center items-center text-xs text-slate-500">
-        <RefreshCw className="w-4 h-4 animate-spin text-indigo-600 mr-2" />
+        <RefreshCw className="w-4 h-4 animate-spin text-blue-600 mr-2" />
         Loading system telemetry...
       </div>
     );
@@ -58,7 +58,7 @@ export const SystemPage: React.FC = () => {
         <div className="card p-5">
           <div className="flex items-center justify-between text-xs text-slate-500 font-medium uppercase">
             <span>Cache Hit Ratio</span>
-            <Activity className="w-4 h-4 text-indigo-600" />
+            <Activity className="w-4 h-4 text-blue-600" />
           </div>
           <div className="mt-2 text-2xl font-bold text-slate-900">
             {metrics ? (metrics.cache_hit_rate * 100).toFixed(1) : 0}%

@@ -105,7 +105,7 @@ export const SearchPage: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
-        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto text-blue-600 shadow-sm">
           <Search className="w-7 h-7" />
         </div>
         <div className="space-y-2">
@@ -142,7 +142,7 @@ export const SearchPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowTourModal(true)}
-            className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
           >
             <HelpCircle className="w-3.5 h-3.5" />
             <span>How Search Works</span>
@@ -151,7 +151,7 @@ export const SearchPage: React.FC = () => {
       </div>
 
       {/* Main Search Input Box */}
-      <div className="card p-2 sm:p-2.5 relative shadow-xs" ref={autocompleteRef}>
+      <div className="card p-2 sm:p-2.5 relative shadow-sm" ref={autocompleteRef}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -209,7 +209,7 @@ export const SearchPage: React.FC = () => {
                   setQuery(item.word);
                   handleSearch(item.word);
                 }}
-                className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-indigo-600 flex items-center justify-between"
+                className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-blue-600 flex items-center justify-between"
               >
                 <div className="flex items-center gap-2">
                   <Search className="w-3.5 h-3.5 text-slate-400" />
@@ -248,7 +248,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('ranked')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'ranked' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                mode === 'ranked' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Smart Search (Recommended)
@@ -257,7 +257,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('hybrid')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'hybrid' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                mode === 'hybrid' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Combined
@@ -266,7 +266,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('keyword')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'keyword' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                mode === 'keyword' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Exact Words
@@ -275,7 +275,7 @@ export const SearchPage: React.FC = () => {
               type="button"
               onClick={() => setMode('vector')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                mode === 'vector' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                mode === 'vector' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Meaning & Topic
@@ -288,7 +288,7 @@ export const SearchPage: React.FC = () => {
       <div className="space-y-3">
         {!hasSearched && !isLoading && (
           <div className="card p-8 text-center space-y-3 bg-slate-50/60 border-dashed border-slate-200">
-            <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+            <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
               <Search className="w-5 h-5" />
             </div>
             <div className="space-y-1">
@@ -325,7 +325,7 @@ export const SearchPage: React.FC = () => {
                   {item.source_type === 'youtube' ? (
                     <Video className="w-3.5 h-3.5 text-rose-500" />
                   ) : (
-                    <FileText className="w-3.5 h-3.5 text-indigo-500" />
+                    <FileText className="w-3.5 h-3.5 text-blue-500" />
                   )}
                   <span>{item.document_title}</span>
                   {item.section && <span className="text-slate-400">&bull; {item.section}</span>}
@@ -347,7 +347,7 @@ export const SearchPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => openSourceModal(item, index)}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800"
                 >
                   <span>View Full Source</span>
                   <ExternalLink className="w-3 h-3" />

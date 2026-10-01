@@ -72,7 +72,7 @@ export const AskNexusPage: React.FC = () => {
             onClick={() => {
               if (cit) setSelectedCitation(cit);
             }}
-            className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors"
+            className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
             title={cit ? `View Source: ${cit.document_title}` : 'Source citation'}
           >
             [{citationIdx}]
@@ -86,7 +86,7 @@ export const AskNexusPage: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
-        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto text-indigo-600 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto text-blue-600 shadow-sm">
           <HelpCircle className="w-7 h-7" />
         </div>
         <div className="space-y-2">
@@ -122,7 +122,7 @@ export const AskNexusPage: React.FC = () => {
       </div>
 
       {/* Question Form */}
-      <div className="card p-4 sm:p-5 space-y-4 shadow-xs">
+      <div className="card p-4 sm:p-5 space-y-4 shadow-sm">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -256,13 +256,13 @@ export const AskNexusPage: React.FC = () => {
                   >
                     <div className="flex items-center justify-between text-xs text-slate-500">
                       <div className="flex items-center gap-1.5 font-medium text-slate-700 truncate">
-                        <span className="w-5 h-5 rounded bg-indigo-50 text-indigo-700 text-[11px] font-bold flex items-center justify-center shrink-0">
+                        <span className="w-5 h-5 rounded bg-blue-50 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">
                           {c.citation_index}
                         </span>
                         {c.source_type === 'youtube' ? (
                           <Video className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                         ) : (
-                          <FileText className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                          <FileText className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                         )}
                         <span className="truncate">{c.document_title}</span>
                       </div>

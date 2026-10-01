@@ -111,7 +111,7 @@ export const EvaluationPage: React.FC = () => {
               onClick={() => setActiveMetric('ir')}
               className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
                 activeMetric === 'ir'
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -121,7 +121,7 @@ export const EvaluationPage: React.FC = () => {
               onClick={() => setActiveMetric('rag')}
               className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
                 activeMetric === 'rag'
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -131,7 +131,7 @@ export const EvaluationPage: React.FC = () => {
               onClick={() => setActiveMetric('latency')}
               className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
                 activeMetric === 'latency'
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -224,10 +224,10 @@ export const EvaluationPage: React.FC = () => {
                       <td className="py-3 px-4 text-center font-mono">
                         {(m.precision_at_k * 100).toFixed(1)}%
                       </td>
-                      <td className="py-3 px-4 text-center font-mono font-semibold text-indigo-600">
+                      <td className="py-3 px-4 text-center font-mono font-semibold text-blue-600">
                         {m.mrr.toFixed(3)}
                       </td>
-                      <td className="py-3 px-4 text-center font-mono font-semibold text-indigo-600">
+                      <td className="py-3 px-4 text-center font-mono font-semibold text-blue-600">
                         {m.ndcg.toFixed(3)}
                       </td>
                       <td className="py-3 px-4 text-center font-mono text-emerald-600 font-medium">

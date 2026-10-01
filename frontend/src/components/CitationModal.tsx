@@ -8,6 +8,22 @@ interface CitationModalProps {
 }
 
 export const CitationModal: React.FC<CitationModalProps> = ({ citation, onClose }) => {
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    if (citation) {
+      const originalOverflow = document.body.style.overflow;
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = '';
+      };
+    }
+  }, [citation]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -21,24 +37,32 @@ export const CitationModal: React.FC<CitationModalProps> = ({ citation, onClose 
   const isYouTube = citation.source_type === 'youtube' || !!citation.timestamp_seconds;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-150">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-150 overscroll-contain"
+      style={{ touchAction: 'none' }}
+    >
       <div 
-        className="w-full max-w-2xl bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden flex flex-col max-h-[85vh]"
+        className="w-full max-w-2xl bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden flex flex-col max-h-[85vh] overscroll-contain"
         role="dialog"
         aria-modal="true"
         aria-labelledby="citation-title"
+        style={{ touchAction: 'auto' }}
+        onWheel={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-2.5">
-            <span className="w-6 h-6 rounded bg-indigo-50 text-indigo-700 text-xs font-bold flex items-center justify-center">
+            <span className="w-6 h-6 rounded bg-blue-50 text-blue-700 text-xs font-bold flex items-center justify-center border border-blue-200">
               [{citation.citation_index}]
             </span>
             <div className="flex items-center gap-2">
               {isYouTube ? (
                 <Video className="w-4 h-4 text-rose-500" />
               ) : (
-                <FileText className="w-4 h-4 text-indigo-600" />
+                <FileText className="w-4 h-4 text-blue-600" />
               )}
               <h2 id="citation-title" className="text-sm font-semibold text-slate-900 truncate max-w-md">
                 {citation.document_title}
@@ -55,8 +79,8 @@ export const CitationModal: React.FC<CitationModalProps> = ({ citation, onClose 
         </div>
 
         {/* Informational Subtitle */}
-        <div className="px-6 py-2.5 bg-indigo-50/40 border-b border-indigo-100 text-xs text-indigo-800 flex items-center gap-1.5 font-medium">
-          <CheckCircle className="w-3.5 h-3.5 text-indigo-600" />
+        <div className="px-6 py-2.5 bg-blue-50/50 border-b border-blue-100 text-xs text-blue-800 flex items-center gap-1.5 font-medium">
+          <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
           <span>This is the verified source information used to support your answer.</span>
         </div>
 
@@ -83,7 +107,7 @@ export const CitationModal: React.FC<CitationModalProps> = ({ citation, onClose 
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-3">
+        <div className="p-6 overflow-y-auto overscroll-contain space-y-3" onWheel={(e) => e.stopPropagation()}>
           <div className="text-xs uppercase tracking-wider font-semibold text-slate-500">
             Source Passage Excerpt
           </div>
