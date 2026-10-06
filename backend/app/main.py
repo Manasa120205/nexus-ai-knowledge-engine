@@ -100,8 +100,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
-            "detail": "An unexpected error occurred while processing your request. Our telemetry has logged the incident.",
-            "type": type(exc).__name__,
+            "detail": "An unexpected error occurred while processing your request. Please try again later.",
         },
     )
 

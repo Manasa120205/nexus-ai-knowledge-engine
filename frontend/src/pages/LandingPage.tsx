@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -11,7 +11,6 @@ import {
   ArrowRight,
   Database,
   Layers,
-  Sparkles,
   ExternalLink,
   Play,
 } from 'lucide-react';
@@ -21,17 +20,6 @@ export const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
   const [tourModalOpen, setTourModalOpen] = useState(false);
-
-  // Auto-prompt tour for first-time visitors
-  useEffect(() => {
-    const hasSeenTour = localStorage.getItem('nexus_tour_seen');
-    if (!hasSeenTour) {
-      const timer = setTimeout(() => {
-        setTourModalOpen(true);
-      }, 1200);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   const USER_STEPS = [
     {

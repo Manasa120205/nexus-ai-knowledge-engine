@@ -18,7 +18,7 @@ describe('Authentication Components', () => {
 
     expect(screen.getByText(/Sign in to NEXUS/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/you@company.com/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/••••••••••••/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Enter your password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Sign In/i })).toBeInTheDocument();
     // Confirms demo buttons are completely removed from production
     expect(screen.queryByText(/demo/i)).not.toBeInTheDocument();

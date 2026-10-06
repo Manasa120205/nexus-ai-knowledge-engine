@@ -399,7 +399,7 @@ export const KnowledgeBasePage: React.FC = () => {
 
               <div>
                 <label className="block text-slate-700 font-medium mb-1">
-                  Select File (PDF, Markdown, or Text &mdash; max 25MB)
+                  Select File (PDF, Markdown, or Text · max 25MB)
                 </label>
                 <input
                   type="file"
@@ -529,7 +529,7 @@ export const KnowledgeBasePage: React.FC = () => {
               {selectedDocChunks.chunks.map((c, i) => (
                 <div key={c.id || i} className="p-3 rounded border border-slate-200 bg-slate-50/50 space-y-1">
                   <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-                    <span>Section #{c.chunk_index + 1} {c.section ? `— ${c.section}` : ''}</span>
+                    <span>Section #{c.chunk_index + 1} {c.section ? `· ${c.section}` : ''}</span>
                     <span>
                       {c.page_number ? `Page ${c.page_number}` : ''}
                       {c.timestamp_seconds ? `Time: ${c.timestamp_seconds}s` : ''}

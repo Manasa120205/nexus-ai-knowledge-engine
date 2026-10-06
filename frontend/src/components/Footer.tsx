@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
             N
           </div>
           <span className="font-semibold text-slate-700">NEXUS</span>
-          <span>&mdash; Technical Knowledge Retrieval Platform</span>
+          <span>· Technical Knowledge Retrieval Platform</span>
         </div>
 
         <div className="flex items-center gap-6">

@@ -13,9 +13,6 @@ from backend.app.security.auth import get_current_user
 
 router = APIRouter(prefix="/history", tags=["Query History"])
 
-DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
-
-
 @router.get("/", response_model=List[QueryHistoryItem])
 async def get_query_history(
     skip: int = Query(default=0, ge=0),
@@ -34,18 +31,6 @@ async def get_query_history(
     )
     result = await db.execute(stmt)
     records = result.scalars().all()
-
-    # If the user has not asked questions yet, show sample knowledge base queries
-    if not records and skip == 0:
-        demo_stmt = (
-            select(QueryRecord)
-            .options(selectinload(QueryRecord.sources))
-            .where(QueryRecord.user_id == DEMO_USER_ID)
-            .order_by(QueryRecord.created_at.desc())
-            .limit(limit)
-        )
-        demo_res = await db.execute(demo_stmt)
-        records = demo_res.scalars().all()
 
     items = []
     for r in records:
@@ -74,11 +59,7 @@ async def get_query_detail(
         .options(selectinload(QueryRecord.sources))
         .where(
             QueryRecord.id == query_id,
-            or_(
-                QueryRecord.user_id == current_user.id,
-                QueryRecord.user_id == DEMO_USER_ID,
-                QueryRecord.user_id == "system",
-            ),
+            QueryRecord.user_id == current_user.id,
         )
     )
     result = await db.execute(stmt)

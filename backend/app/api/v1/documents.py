@@ -142,13 +142,11 @@ async def list_documents(
     List all documents owned by the authenticated user with chunk counts,
     including shared foundational knowledge base documents so accounts always have access to data.
     """
-    DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
     stmt = (
         select(Document)
         .where(
             or_(
                 Document.user_id == current_user.id,
-                Document.user_id == DEMO_USER_ID,
                 Document.user_id == "system",
             )
         )
@@ -183,14 +181,12 @@ async def get_document(
     db: AsyncSession = Depends(get_db),
 ):
     """Retrieve document details by ID, enforcing user isolation or shared knowledge access."""
-    DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
     stmt = select(Document).where(
         Document.id == document_id,
         or_(
             Document.user_id == current_user.id,
-            Document.user_id == DEMO_USER_ID,
             Document.user_id == "system",
-        )
+        ),
     )
     result = await db.execute(stmt)
     doc = result.scalar_one_or_none()
@@ -214,16 +210,14 @@ async def get_document_chunks(
     db: AsyncSession = Depends(get_db),
 ):
     """List structural chunks for a specific document."""
-    DEMO_USER_ID = "3ccdcc89-d39c-4b6c-b2a9-05669881d0e5"
     # Verify ownership or shared knowledge access
     doc_res = await db.execute(
         select(Document).where(
             Document.id == document_id,
             or_(
                 Document.user_id == current_user.id,
-                Document.user_id == DEMO_USER_ID,
                 Document.user_id == "system",
-            )
+            ),
         )
     )
     if not doc_res.scalar_one_or_none():

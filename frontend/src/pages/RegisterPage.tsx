@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { UserPlus, AlertCircle, RefreshCw, CheckCircle2, Server, ChevronDown, ChevronUp } from 'lucide-react';
-import { API_BASE_URL, setCustomApiUrl } from '../api/client';
+import { UserPlus, AlertCircle, RefreshCw } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
   const { register } = useAuth();
@@ -14,11 +13,10 @@ export const RegisterPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showServerSettings, setShowServerSettings] = useState(false);
-  const [customUrlInput, setCustomUrlInput] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setError(null);
 
     if (password.length < 8) {
@@ -65,20 +63,6 @@ export const RegisterPage: React.FC = () => {
                 <span>{error}</span>
               </div>
             </div>
-            {error.includes('Unable to reach') && (
-              <div className="pt-2 flex items-center justify-between border-t border-rose-200/60">
-                <span className="text-[11px] text-rose-600">Free cloud tier may require ~20s cold start.</span>
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded font-medium text-[11px] flex items-center gap-1 shadow-sm"
-                >
-                  <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-                  Retry Now
-                </button>
-              </div>
-            )}
           </div>
         )}
 
@@ -91,7 +75,7 @@ export const RegisterPage: React.FC = () => {
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="e.g. Margaret Hamilton"
+              placeholder="Margaret Hamilton"
               className="form-input"
             />
           </div>
@@ -165,55 +149,6 @@ export const RegisterPage: React.FC = () => {
           <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700">
             Sign in
           </Link>
-        </div>
-
-        {/* Connection Diagnostics and Fallback Settings */}
-        <div className="pt-2 text-center border-t border-slate-100">
-          <button
-            type="button"
-            onClick={() => setShowServerSettings(!showServerSettings)}
-            className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors inline-flex items-center gap-1"
-          >
-            <Server className="w-3 h-3 text-slate-400" />
-            Backend API: <span className="font-mono text-slate-600">{API_BASE_URL}</span>
-            {showServerSettings ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-          </button>
-
-          {showServerSettings && (
-            <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-left space-y-2 text-xs">
-              <label className="block text-[11px] font-medium text-slate-700">
-                Custom Backend API URL (Optional)
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="https://nexus-ai-engine.onrender.com/api/v1"
-                  value={customUrlInput}
-                  onChange={(e) => setCustomUrlInput(e.target.value)}
-                  className="form-input text-xs py-1 flex-1 font-mono"
-                />
-                <button
-                  type="button"
-                  onClick={() => setCustomApiUrl(customUrlInput)}
-                  className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium"
-                >
-                  Save
-                </button>
-                {localStorage.getItem('nexus_custom_api_url') && (
-                  <button
-                    type="button"
-                    onClick={() => setCustomApiUrl('')}
-                    className="px-2 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs font-medium"
-                  >
-                    Reset
-                  </button>
-                )}
-              </div>
-              <p className="text-[10px] text-slate-400 leading-normal">
-                By default, requests use relative <code>/api/v1</code>. If you deployed your backend to Render or another cloud host, you can enter its URL here.
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>

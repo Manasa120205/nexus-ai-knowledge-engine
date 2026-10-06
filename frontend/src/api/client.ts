@@ -74,7 +74,7 @@ class ApiClient {
         err.message?.includes('Load failed')
       ) {
         throw new Error(
-          'Unable to reach the NEXUS backend server. The cloud service may be waking up (cold start ~15-25s) or temporarily unreachable. Please retry in a few moments.'
+          'Unable to connect to the NEXUS service. Please check your network connection or try again shortly.'
         );
       }
       throw err;
