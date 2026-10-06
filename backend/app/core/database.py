@@ -84,7 +84,7 @@ async def init_db() -> None:
             await conn.run_sync(Base.metadata.create_all)
         logger.info("Database schema initialized successfully.")
 
-        # Seed default test user if missing
+        # Seed default test users if missing
         try:
             async with AsyncSessionLocal() as session:
                 from sqlalchemy import select
@@ -93,6 +93,7 @@ async def init_db() -> None:
                 res = await session.execute(select(User).where(User.email == "demo@nexus.ai"))
                 if not res.scalar_one_or_none():
                     demo_user = User(
+                        id="3ccdcc89-d39c-4b6c-b2a9-05669881d0e5",
                         email="demo@nexus.ai",
                         hashed_password=hash_password("DemoPass123!"),
                         full_name="NEXUS Demo User",
@@ -101,7 +102,20 @@ async def init_db() -> None:
                     session.add(demo_user)
                     await session.commit()
                     logger.info("Default demo user demo@nexus.ai initialized.")
+
+                m_res = await session.execute(select(User).where(User.email == "manasagoud2022@gmail.com"))
+                if not m_res.scalar_one_or_none():
+                    manasa_user = User(
+                        id="85b9c65a-452e-4c04-becf-b214511210c6",
+                        email="manasagoud2022@gmail.com",
+                        hashed_password=hash_password("SecurePass123!"),
+                        full_name="Pandala Manasa",
+                        is_active=True,
+                    )
+                    session.add(manasa_user)
+                    await session.commit()
+                    logger.info("Primary user manasagoud2022@gmail.com initialized.")
         except Exception as seed_err:
-            logger.warning(f"Demo user seed notice: {seed_err}")
+            logger.warning(f"Default user seed notice: {seed_err}")
     except Exception as e:
         logger.error(f"Error initializing database schema: {e}")
