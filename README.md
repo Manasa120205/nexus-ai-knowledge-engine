@@ -18,7 +18,7 @@ NEXUS combines **dense vector embeddings**, **BM25Okapi sparse lexical search**,
 
 ## 🌐 Live Production Endpoints
 
-- **Live Production Web Application (Vercel):** [https://temporary-brisk-neon-2xgte86.vercel.app](https://temporary-brisk-neon-2xgte86.vercel.app)
+- **Live Production Web Application (Vercel):** [https://nexus-ai-knowledge-retrieval.vercel.app/](https://nexus-ai-knowledge-retrieval.vercel.app/)
 - **Production Backend API (HTTPS):** [https://nexus-engine-api.loca.lt](https://nexus-engine-api.loca.lt)
 - **Interactive OpenAPI / Swagger Documentation:** [https://nexus-engine-api.loca.lt/docs](https://nexus-engine-api.loca.lt/docs)
 - **Backend Health Check:** [https://nexus-engine-api.loca.lt/health](https://nexus-engine-api.loca.lt/health)
